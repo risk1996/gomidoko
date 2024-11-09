@@ -14,7 +14,7 @@ const globalForDb = globalThis as unknown as {
 
 export const pool =
   globalForDb.pool ?? new Pool({ connectionString: serverEnv.DB_URL });
-if (serverEnv.NODE_ENV !== "production") globalForDb.pool = pool;
+if (serverEnv.VITE_APP_ENV !== "production") globalForDb.pool = pool;
 
 export const db = drizzle({
   client: pool,
