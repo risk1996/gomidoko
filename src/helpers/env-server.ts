@@ -6,7 +6,12 @@ const ServerEnvSchema = Type.Object({
     Type.Literal("production"),
     Type.Literal("development"),
   ]),
+  VITE_BASE_URL: Type.String(),
+
   DB_URL: Type.String(),
+
+  OAUTH_GOOGLE_CLIENT_ID: Type.String(),
+  OAUTH_GOOGLE_CLIENT_SECRET: Type.String(),
 });
 export type Env = Static<typeof ServerEnvSchema>;
 

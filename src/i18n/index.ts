@@ -13,8 +13,9 @@ import {
 } from "solid-js";
 
 import type en from "~/i18n/locales/en";
+import dayjs from "~/lib/dayjs";
 
-export type Locale = "en" | "jp";
+export type Locale = "en" | "ja";
 export type RawDictionary = typeof en;
 export type Dictionary = Flatten<RawDictionary>;
 
@@ -24,6 +25,7 @@ export async function fetchDictionary(locale: Locale): Promise<Dictionary> {
 }
 
 const [getLocale, setLocale] = createSignal<Locale>("en");
+dayjs.locale(getLocale());
 
 export interface I18n {
   t: NullableChainedTranslator<Dictionary, string>;
@@ -35,8 +37,10 @@ export function useI18n(): I18n {
   const [dict] = createResource(getLocale, fetchDictionary);
   const t = proxyTranslator(translator(dict));
 
-  const changeLocale = (locale: Locale) =>
+  const changeLocale = (locale: Locale) => {
     startTransition(() => setLocale(locale));
+    dayjs.locale(locale);
+  };
 
   return { t, dict, getLocale, changeLocale };
 }

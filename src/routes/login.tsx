@@ -1,9 +1,13 @@
 import { type RouteSectionProps, useSubmission } from "@solidjs/router";
 import { Show } from "solid-js";
+import apiClient from "~/helpers/api";
+
 import { loginOrRegister } from "~/lib";
 
 export default function Login(props: RouteSectionProps) {
   const loggingIn = useSubmission(loginOrRegister);
+
+  const handleClick = () => apiClient.api.auth.login.google.get();
 
   return (
     <main>
@@ -33,6 +37,9 @@ export default function Login(props: RouteSectionProps) {
           <input name="password" type="password" placeholder="twixrox" />
         </div>
         <button type="submit">Login</button>
+        <button type="button" onClick={handleClick}>
+          Login with Google
+        </button>
         <Show when={loggingIn.result}>
           <p style={{ color: "red" }} role="alert" id="error-message">
             {loggingIn.result!.message}
