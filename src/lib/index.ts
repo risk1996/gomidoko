@@ -6,7 +6,7 @@ import {
   logout as logoutSession,
   register,
   validatePassword,
-  validateUsername
+  validateUsername,
 } from "./server";
 
 export const getUser = query(async () => {
@@ -29,7 +29,7 @@ export const loginOrRegister = action(async (formData: FormData) => {
   const username = String(formData.get("username"));
   const password = String(formData.get("password"));
   const loginType = String(formData.get("loginType"));
-  let error = validateUsername(username) || validatePassword(password);
+  const error = validateUsername(username) || validatePassword(password);
   if (error) return new Error(error);
 
   try {
@@ -37,7 +37,7 @@ export const loginOrRegister = action(async (formData: FormData) => {
       ? register(username, password)
       : login(username, password));
     const session = await getSession();
-    await session.update(d => {
+    await session.update((d) => {
       d.userId = user.id;
     });
   } catch (err) {

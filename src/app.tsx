@@ -7,7 +7,7 @@ import "./app.css";
 export default function App() {
   return (
     <Router
-      root={props => (
+      root={(props) => (
         <>
           <a href="/">Index</a>
           <a href="/about">About</a>

@@ -21,7 +21,7 @@ export async function login(username: string, password: string) {
 
 export async function logout() {
   const session = await getSession();
-  await session.update(d => {
+  await session.update((d) => {
     d.userId = undefined;
   });
 }
@@ -30,12 +30,13 @@ export async function register(username: string, password: string) {
   const existingUser = await db.user.findUnique({ where: { username } });
   if (existingUser) throw new Error("User already exists");
   return db.user.create({
-    data: { username: username, password }
+    data: { username: username, password },
   });
 }
 
 export function getSession() {
   return useSession({
-    password: process.env.SESSION_SECRET ?? "areallylongsecretthatyoushouldreplace"
+    password:
+      process.env.SESSION_SECRET ?? "areallylongsecretthatyoushouldreplace",
   });
 }

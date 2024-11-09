@@ -7,14 +7,18 @@
     "start": "vinxi start"
   },
   "dependencies": {
-    "@solidjs/router": "^0.15.0",
+    "@solidjs/router": "^0.15.1",
     "@solidjs/start": "^1.0.10",
-    "solid-js": "^1.9.2",
-    "unstorage": "1.10.2",
+    "solid-js": "^1.9.3",
+    "unstorage": "1.13.1",
     "vinxi": "^0.4.3"
   },
   "devDependencies": {
-    "@types/node": "^20.12.7"
+    "@biomejs/biome": "1.9.4",
+    "@total-typescript/ts-reset": "^0.6.1",
+    "@tsconfig/strictest": "^2.0.5",
+    "@types/bun": "^1.1.13",
+    "@types/node": "^22.9.0"
   },
   "engines": {
     "node": ">=18"

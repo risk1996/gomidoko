@@ -1,8 +1,10 @@
-import { createAsync, type RouteDefinition } from "@solidjs/router";
+import { type RouteDefinition, createAsync } from "@solidjs/router";
 import { getUser, logout } from "~/lib";
 
 export const route = {
-  preload() { getUser() }
+  preload() {
+    getUser();
+  },
 } satisfies RouteDefinition;
 
 export default function Home() {
