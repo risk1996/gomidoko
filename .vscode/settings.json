@@ -22,11 +22,13 @@
     "elysiajs",
     "gomidoko",
     "googlemaps",
+    "iconify",
     "kobalte",
     "solidjs",
     "tanstack",
     "typebox",
-    "valibot"
+    "valibot",
+    "vinxi"
   ],
   "files.exclude": {
     "**/.git": true,

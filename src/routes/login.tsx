@@ -1,7 +1,6 @@
 import type { RouteSectionProps } from "@solidjs/router";
-import MapView from "~/components/mapgl-view";
 
-import Button from "~/components/ui/button";
+import { Button } from "~/components/ui/button";
 import apiClient from "~/helpers/api";
 
 export default function Login(props: RouteSectionProps) {
@@ -11,7 +10,6 @@ export default function Login(props: RouteSectionProps) {
 
   return (
     <>
-      <MapView />
       <h1>Login</h1>
       <form method="post">
         <input

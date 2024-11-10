@@ -13,6 +13,9 @@
   "linter": {
     "enabled": true,
     "rules": {
+      "a11y": {
+        "noLabelWithoutControl": "off"
+      },
       "recommended": true
     }
   },

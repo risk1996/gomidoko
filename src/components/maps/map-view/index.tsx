@@ -1,15 +1,18 @@
 import { Loader } from "@googlemaps/js-api-loader";
-import { type Component, createEffect } from "solid-js";
+import { useColorMode } from "@kobalte/core";
+import { type Component, type JSX, createEffect } from "solid-js";
 
 import clientEnv from "~/helpers/env-client";
 
 export interface MapViewProps {
+  children?: JSX.Element;
   class?: string;
   options: google.maps.MapOptions;
 }
 
 const MapView: Component<MapViewProps> = (props) => {
-  const ref = (<div class={props.class} />) as HTMLElement;
+  const { colorMode } = useColorMode();
+  const ref = (<div class={props.class}>{props.children}</div>) as HTMLElement;
 
   createEffect(() => {
     const loader = new Loader({
@@ -18,8 +21,10 @@ const MapView: Component<MapViewProps> = (props) => {
     });
     loader.importLibrary("maps").then((lib) => {
       new lib.Map(ref, {
-        // TODO Maps ColorScheme
-        colorScheme: google.maps.ColorScheme.DARK,
+        colorScheme:
+          colorMode() === "dark"
+            ? google.maps.ColorScheme.DARK
+            : google.maps.ColorScheme.LIGHT,
         disableDefaultUI: true,
         ...props.options,
       });

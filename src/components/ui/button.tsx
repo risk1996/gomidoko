@@ -63,4 +63,4 @@ const Button = <T extends ValidComponent = "button">(
   );
 };
 
-export default Button;
+export { Button };
