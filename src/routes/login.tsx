@@ -1,18 +1,19 @@
-import { type RouteSectionProps, useSubmission } from "@solidjs/router";
-import { Show } from "solid-js";
+import type { RouteSectionProps } from "@solidjs/router";
+import MapView from "~/components/mapgl-view";
+
+import Button from "~/components/ui/button";
 import apiClient from "~/helpers/api";
 
-import { loginOrRegister } from "~/lib";
-
 export default function Login(props: RouteSectionProps) {
-  const loggingIn = useSubmission(loginOrRegister);
+  // const loggingIn = useSubmission(loginOrRegister);
 
   const handleClick = () => apiClient.api.auth.login.google.get();
 
   return (
-    <main>
+    <>
+      <MapView />
       <h1>Login</h1>
-      <form action={loginOrRegister} method="post">
+      <form method="post">
         <input
           type="hidden"
           name="redirectTo"
@@ -40,12 +41,13 @@ export default function Login(props: RouteSectionProps) {
         <button type="button" onClick={handleClick}>
           Login with Google
         </button>
-        <Show when={loggingIn.result}>
+        <Button>Login with Google</Button>
+        {/* <Show when={loggingIn.result}>
           <p style={{ color: "red" }} role="alert" id="error-message">
             {loggingIn.result!.message}
           </p>
-        </Show>
+        </Show> */}
       </form>
-    </main>
+    </>
   );
 }

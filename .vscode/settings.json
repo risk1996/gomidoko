@@ -18,8 +18,11 @@
   "editor.defaultFormatter": "biomejs.biome",
   "cSpell.words": [
     "biomejs",
+    "clsx",
     "elysiajs",
     "gomidoko",
+    "googlemaps",
+    "kobalte",
     "solidjs",
     "tanstack",
     "typebox",
