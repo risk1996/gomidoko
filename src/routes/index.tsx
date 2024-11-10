@@ -1,16 +1,17 @@
 import type { RouteDefinition } from "@solidjs/router";
-import { MapView } from "~/components/maps";
-import { MAP_STYLE_INFRASTRUCTURE_ONLY } from "~/constants/maps";
+import type { Component } from "solid-js";
 
 export const route = {
   preload() {},
 } satisfies RouteDefinition;
 
-export default function Home() {
+const Home: Component = () => {
   // const user = createAsync(() => getUser(), { deferStream: true });
   return (
     <>
-      <MapView
+      <div class="z-[-1] flex flex-grow bg-slate-900 p-4" />
+
+      {/* <MapView
         class="absolute inset-0 z-[-1]"
         options={{
           center: { lng: 139.7425031, lat: 35.6782385 },
@@ -18,9 +19,9 @@ export default function Home() {
           minZoom: 12,
           styles: MAP_STYLE_INFRASTRUCTURE_ONLY,
         }}
-      />
+      /> */}
 
-      <div class="w-full p-4 space-y-2">
+      <div class="w-full space-y-2 p-4">
         <h2 class="font-bold text-3xl">Hello {/* user()?.username */}</h2>
         <h3 class="font-bold text-xl">Message board</h3>
         <form method="post">
@@ -31,4 +32,6 @@ export default function Home() {
       </div>
     </>
   );
-}
+};
+
+export default Home;

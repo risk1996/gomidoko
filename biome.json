@@ -12,9 +12,25 @@
   },
   "linter": {
     "enabled": true,
+    "ignore": [
+      "./src/entry-client.tsx"
+    ],
     "rules": {
       "a11y": {
         "noLabelWithoutControl": "off"
+      },
+      "nursery": {
+        "useSortedClasses": {
+          "level": "warn",
+          "options": {
+            "attributes": [
+              "class"
+            ],
+            "functions": [
+              "cn"
+            ]
+          }
+        }
       },
       "recommended": true
     }
