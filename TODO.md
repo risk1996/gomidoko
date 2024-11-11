@@ -1,5 +1,4 @@
  - [ ] Restrict Maps API usage
- - [ ] Logout
  - [ ] Password + 2FA Login
   * https://github.com/lucia-auth/example-nextjs-email-password-2fa
  - [ ] Create Resource Caching

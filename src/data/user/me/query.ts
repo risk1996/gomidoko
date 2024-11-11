@@ -7,7 +7,7 @@ import {
 import type { TreatyData, TreatyError } from "~/helpers/api";
 import apiClient, { treatyQueryFn } from "~/helpers/api";
 
-export namespace UserMe {
+export namespace UserMeQuery {
   export const get = apiClient.api.user.me.get;
   export type Endpoint = typeof get;
   export type Request = () => null;

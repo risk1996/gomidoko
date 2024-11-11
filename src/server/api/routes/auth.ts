@@ -13,6 +13,7 @@ import AuthProvider from "~/enums/auth-provider";
 import serverEnv from "~/helpers/env-server";
 import { asyncTryOrNull } from "~/helpers/fallible";
 import { db } from "~/server/db";
+import type { Entity, ID } from "~/server/db/id";
 import { userSessionTable, userTable } from "~/server/db/schema";
 
 const google = new Google(
@@ -30,7 +31,7 @@ export const authRoute = new Elysia({ prefix: "/auth" })
       const scopes = ["openid", "profile"];
       const url = google.createAuthorizationURL(state, codeVerifier, scopes);
 
-      cookie.googleOauth.set({
+      cookie.oauth.set({
         value: { state, codeVerifier },
         path: "/",
         httpOnly: true,
@@ -47,7 +48,7 @@ export const authRoute = new Elysia({ prefix: "/auth" })
     {
       cookie: t.Cookie(
         {
-          googleOauth: t.Optional(
+          oauth: t.Optional(
             t.Object({
               state: t.String(),
               codeVerifier: t.String(),
@@ -56,20 +57,21 @@ export const authRoute = new Elysia({ prefix: "/auth" })
         },
         { httpOnly: true, secure: serverEnv.VITE_APP_ENV === "production" },
       ),
+      response: t.Null(),
     },
   )
   .get(
     "/login/google/callback",
-    async ({ query, cookie: { auth, googleOauth }, error }) => {
+    async ({ query, cookie, error }) => {
       const { code, state } = query;
-      const { state: storedState, codeVerifier } = googleOauth.value;
+      const { state: storedState, codeVerifier } = cookie.oauth.value;
 
-      if (state !== storedState) return error(400);
+      if (state !== storedState) return error(400, null);
 
       const tokens = await asyncTryOrNull(() =>
         google.validateAuthorizationCode(code, codeVerifier),
       );
-      if (tokens === null) return error(400);
+      if (tokens === null) return error(400, null);
 
       const claims = decodeIdToken(tokens.idToken());
       const googleUserId: string = claims.sub;
@@ -99,7 +101,7 @@ export const authRoute = new Elysia({ prefix: "/auth" })
       const session = sessions[0];
       invariant(session, "Session was not created");
 
-      auth.set({
+      cookie.auth.set({
         value: session.id,
         path: "/",
         httpOnly: true,
@@ -107,10 +109,11 @@ export const authRoute = new Elysia({ prefix: "/auth" })
         maxAge: dayjs.duration(1, "day").asSeconds(),
         sameSite: "lax",
       });
+      cookie.oauth.remove();
 
       return new Response(null, {
         status: 302,
-        headers: { location: serverEnv.VITE_BASE_URL },
+        headers: { location: `${serverEnv.VITE_BASE_URL}/oauth/logged-in` },
       });
     },
     {
@@ -118,12 +121,37 @@ export const authRoute = new Elysia({ prefix: "/auth" })
       cookie: t.Cookie(
         {
           auth: t.Optional(t.String()),
-          googleOauth: t.Object({
+          oauth: t.Object({
             state: t.String(),
             codeVerifier: t.String(),
           }),
         },
         { httpOnly: true, secure: serverEnv.VITE_APP_ENV === "production" },
       ),
+      response: {
+        302: t.Null(),
+        400: t.Null(),
+      },
+    },
+  )
+  .post(
+    "/logout",
+    async ({ cookie: { auth } }) => {
+      const session = auth.value;
+      if (!session) return null;
+
+      await db
+        .delete(userSessionTable)
+        .where(eq(userSessionTable.id, auth.value as ID<Entity.UserSession>));
+      auth.remove();
+
+      return null;
+    },
+    {
+      cookie: t.Cookie(
+        { auth: t.Optional(t.String()) },
+        { httpOnly: true, secure: serverEnv.VITE_APP_ENV === "production" },
+      ),
+      response: t.Null(),
     },
   );

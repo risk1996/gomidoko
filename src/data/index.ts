@@ -1,14 +1,12 @@
-import { AuthLoginGoogle } from "~/data/auth/login/google/query";
-import { UserMe } from "~/data/user/me/query";
+import { AuthLogoutMutation } from "~/data/auth/logout/mutation";
+import { UserMeQuery } from "~/data/user/me/query";
 
 const api = {
   auth: {
-    login: {
-      google: AuthLoginGoogle,
-    },
+    logout: AuthLogoutMutation,
   },
   user: {
-    me: UserMe,
+    me: UserMeQuery,
   },
 };
 
