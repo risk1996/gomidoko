@@ -1,26 +1,16 @@
-import {
-  Google,
-  decodeIdToken,
-  generateCodeVerifier,
-  generateState,
-} from "arctic";
+import { decodeIdToken, generateCodeVerifier, generateState } from "arctic";
 import dayjs from "dayjs";
-import { eq } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 import Elysia, { t } from "elysia";
 import invariant from "tiny-invariant";
 
 import AuthProvider from "~/enums/auth-provider";
 import serverEnv from "~/helpers/env-server";
-import { asyncTryOrNull } from "~/helpers/fallible";
+import { tryOrNull, tryOrNullAsync } from "~/helpers/fallible";
 import { db } from "~/server/db";
 import type { Entity, ID } from "~/server/db/id";
 import { userSessionTable, userTable } from "~/server/db/schema";
-
-const google = new Google(
-  serverEnv.OAUTH_GOOGLE_CLIENT_ID,
-  serverEnv.OAUTH_GOOGLE_CLIENT_SECRET,
-  `${serverEnv.VITE_BASE_URL}/api/auth/login/google/callback`,
-);
+import GoogleOAuth from "~/server/oauth/google";
 
 export const authRoute = new Elysia({ prefix: "/auth" })
   .get(
@@ -28,8 +18,11 @@ export const authRoute = new Elysia({ prefix: "/auth" })
     ({ cookie }) => {
       const state = generateState();
       const codeVerifier = generateCodeVerifier();
-      const scopes = ["openid", "profile"];
-      const url = google.createAuthorizationURL(state, codeVerifier, scopes);
+      const url = GoogleOAuth.client.createAuthorizationURL(
+        state,
+        codeVerifier,
+        GoogleOAuth.scope,
+      );
 
       cookie.oauth.set({
         value: { state, codeVerifier },
@@ -68,24 +61,34 @@ export const authRoute = new Elysia({ prefix: "/auth" })
 
       if (state !== storedState) return error(400, null);
 
-      const tokens = await asyncTryOrNull(() =>
-        google.validateAuthorizationCode(code, codeVerifier),
+      const tokens = await tryOrNullAsync(() =>
+        GoogleOAuth.client.validateAuthorizationCode(code, codeVerifier),
       );
       if (tokens === null) return error(400, null);
 
-      const claims = decodeIdToken(tokens.idToken());
-      const googleUserId: string = claims.sub;
-      const username: string = claims.name;
+      const claims = tryOrNull(() =>
+        GoogleOAuth.parseToken(decodeIdToken(tokens.idToken())),
+      );
+      if (claims === null) return error(500, null);
+
+      const {
+        sub: googleId,
+        name: username,
+        email,
+        email_verified: emailVerified,
+        picture,
+      } = claims;
+
       let existingUsers = await db
         .select({ id: userTable.id })
         .from(userTable)
-        // TODO: Or check by email
-        .where(eq(userTable.googleId, googleUserId));
+        .where(
+          or(eq(userTable.googleId, googleId), eq(userTable.email, email)),
+        );
       if (existingUsers.length === 0)
         existingUsers = await db
           .insert(userTable)
-          // TODO: Check email
-          .values({ email: "test@gmail.com", username, googleId: googleUserId })
+          .values({ email, emailVerified, username, googleId, picture })
           .returning({ id: userTable.id });
       const existingUser = existingUsers[0];
       invariant(existingUser, "User was not created");
@@ -131,6 +134,7 @@ export const authRoute = new Elysia({ prefix: "/auth" })
       response: {
         302: t.Null(),
         400: t.Null(),
+        500: t.Null(),
       },
     },
   )

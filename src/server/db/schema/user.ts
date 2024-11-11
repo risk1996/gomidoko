@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { index, text, timestamp } from "drizzle-orm/pg-core";
+import { boolean, index, text, timestamp } from "drizzle-orm/pg-core";
 
 import { Entity, type ID, idGenerator } from "~/server/db/id";
 import { createTable } from "~/server/db/namespace";
@@ -18,8 +18,10 @@ export const userTable = createTable(
       .notNull()
       .defaultNow(),
     email: text("email").notNull().unique("user_email_unique"),
+    emailVerified: boolean("email_verified").notNull().default(false),
     username: text("username").notNull().unique("user_username_unique"),
     googleId: text("google_id").unique("user_google_id_unique"),
+    picture: text("picture"),
   }),
   (self) => [
     { googleIdIndex: index("user_google_id_index").on(self.googleId) },

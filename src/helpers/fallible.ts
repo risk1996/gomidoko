@@ -13,7 +13,7 @@ export function tryOrNull<T>(fn: () => T): T | null {
   return tryOr(fn, () => null);
 }
 
-export async function asyncTryOr<T, U = T>(
+export async function tryOrAsync<T, U = T>(
   fn: () => Promise<T>,
   fallback: (e: unknown) => U,
 ): Promise<T | U> {
@@ -24,8 +24,8 @@ export async function asyncTryOr<T, U = T>(
   }
 }
 
-export async function asyncTryOrNull<T>(
+export async function tryOrNullAsync<T>(
   fn: () => Promise<T>,
 ): Promise<T | null> {
-  return asyncTryOr(fn, () => null);
+  return tryOrAsync(fn, () => null);
 }
