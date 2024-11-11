@@ -8,8 +8,8 @@ import dayjs from "dayjs";
 import { eq } from "drizzle-orm";
 import Elysia, { t } from "elysia";
 import invariant from "tiny-invariant";
-import AuthProvider from "~/enums/auth-provider";
 
+import AuthProvider from "~/enums/auth-provider";
 import serverEnv from "~/helpers/env-server";
 import { asyncTryOrNull } from "~/helpers/fallible";
 import { db } from "~/server/db";
@@ -77,10 +77,12 @@ export const authRoute = new Elysia({ prefix: "/auth" })
       let existingUsers = await db
         .select({ id: userTable.id })
         .from(userTable)
+        // TODO: Or check by email
         .where(eq(userTable.googleId, googleUserId));
       if (existingUsers.length === 0)
         existingUsers = await db
           .insert(userTable)
+          // TODO: Check email
           .values({ email: "test@gmail.com", username, googleId: googleUserId })
           .returning({ id: userTable.id });
       const existingUser = existingUsers[0];

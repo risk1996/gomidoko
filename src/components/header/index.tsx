@@ -1,4 +1,5 @@
 import type { Component } from "solid-js";
+import HeaderUserMenu from "~/components/header/user-menu";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -9,11 +10,18 @@ import {
   NavigationMenuLink,
   NavigationMenuTrigger,
 } from "~/components/ui/navigation-menu";
+import { useI18n } from "~/i18n";
 
 const Header: Component = () => {
+  const { t } = useI18n();
+
   return (
-    <div class="flex flex-col items-center space-y-4">
+    <div class="flex items-center px-6 py-4">
       <NavigationMenu>
+        <NavigationMenuTrigger as="a" href="/" class="font-bold text-xl">
+          {t.title()}
+        </NavigationMenuTrigger>
+
         <NavigationMenuItem>
           <NavigationMenuTrigger>
             Getting started
@@ -105,29 +113,9 @@ const Header: Component = () => {
             </NavigationMenuLink>
           </NavigationMenuContent>
         </NavigationMenuItem>
-
-        <NavigationMenuTrigger
-          as="a"
-          href="https://github.com/kobaltedev/kobalte"
-          target="_blank"
-        >
-          GitHub
-        </NavigationMenuTrigger>
       </NavigationMenu>
 
-      {/* <RadioGroup<Orientation>
-        class="flex"
-        value={orientation()}
-        onChange={(value) => setOrientation(value as Orientation)}
-      >
-        <For each={["horizontal", "vertical"]}>
-          {(orientation) => (
-            <RadioGroupItem value={orientation}>
-              <RadioGroupItemLabel>{orientation}</RadioGroupItemLabel>
-            </RadioGroupItem>
-          )}
-        </For>
-      </RadioGroup> */}
+      <HeaderUserMenu />
     </div>
   );
 };

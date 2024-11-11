@@ -12,9 +12,7 @@
   },
   "linter": {
     "enabled": true,
-    "ignore": [
-      "./src/entry-client.tsx"
-    ],
+    "ignore": ["./src/entry-client.tsx"],
     "rules": {
       "a11y": {
         "noLabelWithoutControl": "off"
@@ -23,12 +21,8 @@
         "useSortedClasses": {
           "level": "warn",
           "options": {
-            "attributes": [
-              "class"
-            ],
-            "functions": [
-              "cn"
-            ]
+            "attributes": ["class"],
+            "functions": ["cn"]
           }
         }
       },

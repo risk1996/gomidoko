@@ -25,6 +25,7 @@
     "iconify",
     "kobalte",
     "solidjs",
+    "tabler",
     "tanstack",
     "typebox",
     "valibot",
@@ -41,6 +42,6 @@
     "**/.factorypath": true,
     "**/.project": true,
     "**/.settings": true,
-    "**/node_modules": true
+    "**/node_modules": false
   }
 }
