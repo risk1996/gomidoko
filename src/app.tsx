@@ -2,17 +2,25 @@
 import { MetaProvider } from "@solidjs/meta";
 import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
-import { QueryClientProvider } from "@tanstack/solid-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/solid-query";
 import { SolidQueryDevtools } from "@tanstack/solid-query-devtools";
 import type { Component } from "solid-js";
 
 import I18nProvider from "~/components/i18n-provider";
 import Layout from "~/components/layout";
-import { queryClient } from "~/helpers/query";
+import day from "~/lib/dayjs";
 
 import "~/app.css";
 
 const App: Component = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: day.duration(1, "day").asMilliseconds(),
+      },
+    },
+  });
+
   return (
     <MetaProvider>
       <I18nProvider>

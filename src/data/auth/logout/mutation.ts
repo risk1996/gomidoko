@@ -33,7 +33,6 @@ export namespace AuthLogoutMutation {
       ...options,
       onSuccess(data, variables, context) {
         options?.onSuccess?.(data, variables, context);
-        console.log(UserMeQuery.getQueryKey(() => null));
         queryClient.invalidateQueries({
           queryKey: UserMeQuery.getQueryKey(() => null),
         });

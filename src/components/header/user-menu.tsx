@@ -15,7 +15,8 @@ const HeaderUserMenu: Component = () => {
   return (
     <Avatar class="ml-auto">
       <Show
-        when={meQuery.isSuccess && meQuery.data?.data}
+        // TODO: File bug, when flipping this condition, the state is stuck to the old state
+        when={meQuery.data?.data && meQuery.isSuccess}
         fallback={
           <AvatarFallback as="a" target="_self" href="/api/auth/login/google">
             <Icon icon="tabler:user" width="24px" />

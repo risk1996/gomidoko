@@ -1,8 +1,8 @@
-import dayjs from "dayjs";
+import day from "dayjs";
 import "dayjs/locale/en";
 import "dayjs/locale/ja";
 import DurationPlugin from "dayjs/plugin/duration";
 
-dayjs.extend(DurationPlugin);
+day.extend(DurationPlugin);
 
-export default dayjs;
+export default day;
