@@ -1,20 +1,20 @@
 import { and, eq, gte } from "drizzle-orm";
 import Elysia, { error } from "elysia";
-import { tryOrNull } from "~/helpers/fallible";
 
+import { tryOrNull } from "~/helpers/fallible";
 import { db } from "~/server/db";
 import { Entity, parseId } from "~/server/db/id";
 import { userSessionTable, userTable } from "~/server/db/schema";
 
-export function userSession() {
-  return new Elysia({ name: "~/user-session" }).resolve(
+export function maybeUserSession() {
+  return new Elysia({ name: "~/maybe-user-session" }).resolve(
     { as: "global" },
     async ({ cookie }) => {
       const authValue = cookie["auth"]?.value;
-      if (typeof authValue !== "string") return error(401, null);
+      if (typeof authValue !== "string") return { user: null };
 
       const sessionId = tryOrNull(() => parseId(authValue, Entity.UserSession));
-      if (!sessionId) return error(401, null);
+      if (!sessionId) return { user: null };
 
       const users = await db
         .select({
@@ -33,9 +33,17 @@ export function userSession() {
         .where(eq(userSessionTable.id, sessionId));
 
       const user = users[0];
-      if (!user) return error(401, null);
-
       return { user };
     },
   );
+}
+
+export function userSession() {
+  return new Elysia({ name: "~/user-session" })
+    .use(maybeUserSession())
+    .resolve({ as: "global" }, async ({ user }) => {
+      if (!user) throw error(401, null);
+
+      return { user };
+    });
 }
