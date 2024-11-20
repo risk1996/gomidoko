@@ -7,6 +7,7 @@ import invariant from "tiny-invariant";
 import AuthProvider from "~/enums/auth-provider";
 import serverEnv from "~/helpers/env-server";
 import { tryOrNull, tryOrNullAsync } from "~/helpers/fallible";
+import { convertToUsername } from "~/helpers/user";
 import { db } from "~/server/db";
 import type { Entity, ID } from "~/server/db/id";
 import { userSessionTable, userTable } from "~/server/db/schema";
@@ -73,11 +74,12 @@ export const authRoute = new Elysia({ prefix: "/auth" })
 
       const {
         sub: googleId,
-        name: username,
+        name,
         email,
         email_verified: emailVerified,
         picture,
       } = claims;
+      const username = convertToUsername(name);
 
       let existingUsers = await db
         .select({ id: userTable.id })
