@@ -17,6 +17,9 @@
       "a11y": {
         "noLabelWithoutControl": "off"
       },
+      "complexity": {
+        "useLiteralKeys": "off"
+      },
       "nursery": {
         "useSortedClasses": {
           "level": "warn",

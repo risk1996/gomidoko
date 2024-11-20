@@ -1,3 +1,9 @@
+ - [ ] Get Spot
+ - [ ] Upload Photo
+ - [ ] Comment
+ - [ ] Report Spot
+ - [ ] Vote
+ - [ ] API Versioning
  - [ ] Restrict Maps API usage
  - [ ] Password + 2FA Login
   * https://github.com/lucia-auth/example-nextjs-email-password-2fa
