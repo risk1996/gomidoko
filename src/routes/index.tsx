@@ -9,7 +9,7 @@ export const route = {
   preload() {},
 } satisfies RouteDefinition;
 
-const Home: Component = () => {
+const HomePage: Component = () => {
   const user = api.user.me.useQuery(() => null);
   const geolocation = useGeolocation(() => ({
     enableHighAccuracy: true,
@@ -22,7 +22,8 @@ const Home: Component = () => {
       <div class="z-[-1] flex flex-grow bg-slate-900 p-4" />
 
       {/* <MapView
-        class="absolute inset-0 z-[-1]"
+        apiKey={clientEnv.VITE_GOOGLE_MAPS_API_KEY}
+        class="flex flex-grow bg-slate-900 p-4"
         options={{
           center: { lng: 139.7425031, lat: 35.6782385 },
           zoom: 16,
@@ -48,4 +49,4 @@ const Home: Component = () => {
   );
 };
 
-export default Home;
+export default HomePage;

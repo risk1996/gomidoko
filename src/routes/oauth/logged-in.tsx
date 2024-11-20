@@ -4,7 +4,7 @@ import { type Component, createRenderEffect } from "solid-js";
 
 import api from "~/data";
 
-const OAuthLoggedIn: Component = () => {
+const OAuthLoggedInPage: Component = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -18,4 +18,4 @@ const OAuthLoggedIn: Component = () => {
   return null;
 };
 
-export default OAuthLoggedIn;
+export default OAuthLoggedInPage;

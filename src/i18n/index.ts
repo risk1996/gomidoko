@@ -33,6 +33,7 @@ export interface I18n {
   getLocale: typeof getLocale;
   changeLocale: (locale: Locale) => void;
 }
+export type I18nT = I18n["t"];
 export function useI18n(): I18n {
   const [dict] = createResource(getLocale, fetchDictionary);
   const t = proxyTranslator(translator(dict));
