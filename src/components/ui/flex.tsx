@@ -13,7 +13,7 @@ type JustifyContent =
 type AlignItems = "start" | "end" | "center" | "baseline" | "stretch";
 type FlexDirection = "row" | "col" | "row-reverse" | "col-reverse";
 
-type FlexProps = ComponentProps<"div"> & {
+export type FlexProps = ComponentProps<"div"> & {
   flexDirection?: FlexDirection;
   justifyContent?: JustifyContent;
   alignItems?: AlignItems;

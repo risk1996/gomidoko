@@ -13,7 +13,7 @@ const HeaderUserMenu: Component = () => {
   }
 
   return (
-    <Avatar class="ml-auto">
+    <Avatar class="ml-auto size-8">
       <Show
         // TODO: File bug, when flipping this condition, the state is stuck to the old state
         when={meQuery.data?.data && meQuery.isSuccess}

@@ -7,8 +7,10 @@ import {
 import { type Component, For, createSignal } from "solid-js";
 
 import { type InferOutput, array, enum_, object } from "valibot";
+import Container from "~/components/container";
 import { MapMarker, MapView } from "~/components/maps";
 import { Button } from "~/components/ui/button";
+import { Flex } from "~/components/ui/flex";
 import {
   Switch,
   SwitchControl,
@@ -44,8 +46,6 @@ const SpotCreationPage: Component = () => {
 
   return (
     <>
-      <h1 class="font-bold text-2xl">{t.spot.create.title()}</h1>
-
       <MapView
         apiKey={clientEnv.VITE_GOOGLE_MAPS_API_KEY}
         class="flex flex-grow bg-slate-900 p-4"
@@ -59,45 +59,64 @@ const SpotCreationPage: Component = () => {
         <MapMarker position={getPosition()} onDrag={setPosition} />
       </MapView>
 
-      <form class="mt-4" onSubmit={handleFormSubmit(form.handleSubmit)}>
-        <p class="text-base">
-          Location is: {getPosition().lat}, {getPosition().lng}
-        </p>
+      <Container>
+        <h1 class="font-bold text-2xl">{t.spot.create.title()}</h1>
 
-        <For each={allEnumMembers(GarbageType)}>
-          {(type) => (
-            <form.Field name="types">
-              {(field) => (
-                <Switch
-                  class="flex items-center"
-                  checked={field().state.value.includes(type)}
-                  onChange={(checked) =>
-                    field().handleChange((prev) =>
-                      checked
-                        ? prev.concat(type)
-                        : prev.filter((t) => t !== type),
-                    )
-                  }
-                >
-                  <SwitchControl>
-                    <SwitchThumb />
-                  </SwitchControl>
-                  <SwitchLabel class="flex items-center">
-                    <Icon
-                      icon={getGarbageIcon(type)}
-                      width="24px"
-                      class="mx-2"
-                    />
-                    <span>{t.enums.garbageType.member[type]()}</span>
-                  </SwitchLabel>
-                </Switch>
+        <form class="mt-4" onSubmit={handleFormSubmit(form.handleSubmit)}>
+          <p class="text-base">
+            Location is: {getPosition().lat}, {getPosition().lng}
+          </p>
+
+          <span class="mt-4 font-semibold text-lg">
+            {t.enums.garbageType.name()}
+          </span>
+          <Flex flexDirection="col" class="mt-2 gap-2" alignItems="start">
+            <For each={allEnumMembers(GarbageType)}>
+              {(type) => (
+                <form.Field name="types">
+                  {(field) => (
+                    <Switch
+                      class="flex items-center"
+                      checked={field().state.value.includes(type)}
+                      onChange={(checked) =>
+                        field().handleChange((prev) =>
+                          checked
+                            ? prev.concat(type)
+                            : prev.filter((t) => t !== type),
+                        )
+                      }
+                    >
+                      <SwitchControl>
+                        <SwitchThumb />
+                      </SwitchControl>
+                      <SwitchLabel class="flex items-center">
+                        <Icon
+                          icon={getGarbageIcon(type)}
+                          width="24px"
+                          class="mx-2"
+                        />
+                        <span>{t.enums.garbageType.member[type]()}</span>
+                      </SwitchLabel>
+                    </Switch>
+                  )}
+                </form.Field>
               )}
-            </form.Field>
-          )}
-        </For>
+            </For>
+          </Flex>
 
-        <Button type="submit">{t.common.actions.submit()}</Button>
-      </form>
+          <form.Subscribe>
+            {(state) => (
+              <Button
+                type="submit"
+                disabled={state().values.types.length < 1}
+                class="mt-6 w-full"
+              >
+                {t.common.actions.submit()}
+              </Button>
+            )}
+          </form.Subscribe>
+        </form>
+      </Container>
     </>
   );
 };

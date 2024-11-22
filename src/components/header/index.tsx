@@ -1,15 +1,10 @@
 import { Icon } from "@iconify-icon/solid";
 import type { Component } from "solid-js";
 
+import Container from "~/components/container";
 import HeaderUserMenu from "~/components/header/user-menu";
 import {
   NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuDescription,
-  NavigationMenuIcon,
-  NavigationMenuItem,
-  NavigationMenuLabel,
-  NavigationMenuLink,
   NavigationMenuTrigger,
 } from "~/components/ui/navigation-menu";
 import { useI18n } from "~/i18n";
@@ -18,14 +13,18 @@ const Header: Component = () => {
   const { t } = useI18n();
 
   return (
-    <div class="flex items-center px-6 py-4">
+    <Container flexDirection="row" class="items-center">
       <NavigationMenu>
-        <NavigationMenuTrigger as="a" href="/" class="font-bold text-xl">
-          <Icon icon="tabler:trash" width="32px" class="-my-1 mr-1" />
+        <NavigationMenuTrigger
+          as="a"
+          href="/"
+          class="-ml-2 h-8 font-bold text-xl"
+        >
+          <Icon icon="tabler:trash" width="24px" class="mr-1" />
           {t.title()}
         </NavigationMenuTrigger>
 
-        <NavigationMenuItem>
+        {/* <NavigationMenuItem>
           <NavigationMenuTrigger>
             Getting started
             <NavigationMenuIcon />
@@ -36,7 +35,7 @@ const Header: Component = () => {
               class="box-border flex size-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline focus:shadow-md"
               href="https://solid-ui.com"
             >
-              {/* <IconLogo class="size-6" /> */}
+              <IconLogo class="size-6" />
               <NavigationMenuLabel class="mt-4 mb-2 font-medium text-lg">
                 SolidUI
               </NavigationMenuLabel>
@@ -68,9 +67,9 @@ const Header: Component = () => {
               </NavigationMenuDescription>
             </NavigationMenuLink>
           </NavigationMenuContent>
-        </NavigationMenuItem>
+        </NavigationMenuItem> */}
 
-        <NavigationMenuItem>
+        {/* <NavigationMenuItem>
           <NavigationMenuTrigger>
             Overview
             <NavigationMenuIcon />
@@ -115,11 +114,11 @@ const Header: Component = () => {
               </NavigationMenuDescription>
             </NavigationMenuLink>
           </NavigationMenuContent>
-        </NavigationMenuItem>
+        </NavigationMenuItem> */}
       </NavigationMenu>
 
       <HeaderUserMenu />
-    </div>
+    </Container>
   );
 };
 
