@@ -1,3 +1,4 @@
+ - [ ] Create Spot
  - [ ] Get Spot
  - [ ] Upload Photo
  - [ ] Comment
@@ -5,6 +6,7 @@
  - [ ] Vote
  - [ ] API Versioning
  - [ ] Restrict Maps API usage
+ - [ ] Google Username Confirmation Page
  - [ ] Password + 2FA Login
   * https://github.com/lucia-auth/example-nextjs-email-password-2fa
  - [ ] Create Resource Caching

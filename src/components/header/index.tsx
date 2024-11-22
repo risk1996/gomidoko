@@ -1,4 +1,6 @@
+import { Icon } from "@iconify-icon/solid";
 import type { Component } from "solid-js";
+
 import HeaderUserMenu from "~/components/header/user-menu";
 import {
   NavigationMenu,
@@ -19,6 +21,7 @@ const Header: Component = () => {
     <div class="flex items-center px-6 py-4">
       <NavigationMenu>
         <NavigationMenuTrigger as="a" href="/" class="font-bold text-xl">
+          <Icon icon="tabler:trash" width="32px" class="-my-1 mr-1" />
           {t.title()}
         </NavigationMenuTrigger>
 
@@ -34,10 +37,10 @@ const Header: Component = () => {
               href="https://solid-ui.com"
             >
               {/* <IconLogo class="size-6" /> */}
-              <NavigationMenuLabel class="mb-2 mt-4 text-lg font-medium">
+              <NavigationMenuLabel class="mt-4 mb-2 font-medium text-lg">
                 SolidUI
               </NavigationMenuLabel>
-              <NavigationMenuDescription class="text-sm leading-tight text-muted-foreground">
+              <NavigationMenuDescription class="text-muted-foreground text-sm leading-tight">
                 Beautifully designed components. Built with Kobalte & corvu.
                 Styled with Tailwind CSS.
               </NavigationMenuDescription>
