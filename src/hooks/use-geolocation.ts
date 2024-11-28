@@ -1,17 +1,23 @@
 import { createGeolocationWatcher } from "@solid-primitives/geolocation";
 import { createPermission } from "@solid-primitives/permission";
-import type { Accessor } from "solid-js";
+import { type Accessor, mergeProps } from "solid-js";
 
-export type UseGeolocationResult = ReturnType<typeof createGeolocationWatcher>;
+export interface UseGeolocationResult
+  extends ReturnType<typeof createGeolocationWatcher> {
+  permission: Accessor<PermissionState | "unknown">;
+}
 
 export default function useGeolocation(
   options: Accessor<PositionOptions>,
 ): UseGeolocationResult {
   const permission = createPermission("geolocation");
   const geolocationWatcher = createGeolocationWatcher(
-    () => permission() === "granted",
+    () =>
+      permission() === "unknown" ||
+      permission() === "prompt" ||
+      permission() === "granted",
     options,
   );
 
-  return geolocationWatcher;
+  return mergeProps(geolocationWatcher, { permission });
 }

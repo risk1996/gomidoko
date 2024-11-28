@@ -1,4 +1,4 @@
- - [ ] Create Spot
+ - [ ] Get Spots
  - [ ] Get Spot
  - [ ] Upload Photo
  - [ ] Comment
