@@ -42,7 +42,7 @@ export function userSession() {
   return new Elysia({ name: "~/user-session" })
     .use(maybeUserSession())
     .resolve({ as: "global" }, async ({ user }) => {
-      if (!user) throw error(401, null);
+      if (!user) throw error(401, {});
 
       return { user };
     });

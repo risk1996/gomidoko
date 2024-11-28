@@ -8,6 +8,7 @@ import type { Component } from "solid-js";
 
 import I18nProvider from "~/components/i18n-provider";
 import Layout from "~/components/layout";
+import { Toaster } from "~/components/ui/toast";
 import day from "~/lib/dayjs";
 
 import "~/app.css";
@@ -28,6 +29,8 @@ const App: Component = () => {
           <Router root={Layout}>
             <FileRoutes />
           </Router>
+
+          <Toaster />
 
           <SolidQueryDevtools />
         </QueryClientProvider>

@@ -51,7 +51,9 @@ export const authRoute = new Elysia({ prefix: "/auth" })
         },
         { httpOnly: true, secure: serverEnv.VITE_APP_ENV === "production" },
       ),
-      response: t.Null(),
+      response: {
+        302: t.Null(),
+      },
     },
   )
   .get(
@@ -60,17 +62,17 @@ export const authRoute = new Elysia({ prefix: "/auth" })
       const { code, state } = query;
       const { state: storedState, codeVerifier } = cookie.oauth.value;
 
-      if (state !== storedState) return error(400, null);
+      if (state !== storedState) return error(400, {});
 
       const tokens = await tryOrNullAsync(() =>
         GoogleOAuth.client.validateAuthorizationCode(code, codeVerifier),
       );
-      if (tokens === null) return error(400, null);
+      if (tokens === null) return error(400, {});
 
       const claims = tryOrNull(() =>
         GoogleOAuth.parseToken(decodeIdToken(tokens.idToken())),
       );
-      if (claims === null) return error(500, null);
+      if (claims === null) return error(500, {});
 
       const {
         sub: googleId,
@@ -135,8 +137,8 @@ export const authRoute = new Elysia({ prefix: "/auth" })
       ),
       response: {
         302: t.Null(),
-        400: t.Null(),
-        500: t.Null(),
+        400: t.Object({}),
+        500: t.Object({}),
       },
     },
   )
@@ -158,6 +160,8 @@ export const authRoute = new Elysia({ prefix: "/auth" })
         { auth: t.Optional(t.String()) },
         { httpOnly: true, secure: serverEnv.VITE_APP_ENV === "production" },
       ),
-      response: t.Null(),
+      response: {
+        200: t.Null(),
+      },
     },
   );

@@ -1,4 +1,5 @@
 import { AuthLogoutMutation } from "~/data/auth/logout/mutation";
+import { SpotCreateMutation } from "~/data/spot/create/mutation";
 import { UserMeQuery } from "~/data/user/me/query";
 
 const api = {
@@ -7,6 +8,9 @@ const api = {
   },
   user: {
     me: UserMeQuery,
+  },
+  spot: {
+    create: SpotCreateMutation,
   },
 };
 

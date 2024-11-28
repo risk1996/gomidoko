@@ -5,6 +5,7 @@ const en = {
 
   common: {
     actions: {
+      close: "Close",
       submit: "Submit",
     },
   },
@@ -28,6 +29,9 @@ const en = {
 
     create: {
       title: "Create new spot",
+      toast: {
+        success: { title: "Spot created successfully!" },
+      },
     },
   },
 };

@@ -25,7 +25,7 @@ export namespace UserMeQuery {
   export function useQuery(request: Request, options?: Options) {
     return createQuery<Response, Error, Response, QueryKey>(() => ({
       queryKey: getQueryKey(request),
-      queryFn: treatyQueryFn(get),
+      queryFn: treatyQueryFn(() => get()),
       ...options,
     }));
   }

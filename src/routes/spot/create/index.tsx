@@ -1,4 +1,5 @@
 import { Icon } from "@iconify-icon/solid";
+import { useNavigate } from "@solidjs/router";
 import { createForm } from "@tanstack/solid-form";
 import {
   type ValibotValidator,
@@ -17,7 +18,9 @@ import {
   SwitchLabel,
   SwitchThumb,
 } from "~/components/ui/switch";
+import { showToast } from "~/components/ui/toast";
 import { MAP_STYLE_INFRASTRUCTURE_ONLY } from "~/constants/maps";
+import api from "~/data";
 import GarbageType, { getGarbageIcon } from "~/enums/garbage-type";
 import { allEnumMembers } from "~/helpers/enum";
 import clientEnv from "~/helpers/env-client";
@@ -25,13 +28,17 @@ import { handleFormSubmit } from "~/helpers/form";
 import type { LatLng } from "~/helpers/geo";
 import { useI18n } from "~/i18n";
 
+// TODO: Protect with auth
 const SpotCreationPage: Component = () => {
   const { t } = useI18n();
+  const navigate = useNavigate();
 
   const [getPosition, setPosition] = createSignal<LatLng>({
     lng: 139.7425031,
     lat: 35.6782385,
   });
+
+  const spotCreateMutation = api.spot.create.useMutation();
 
   const formSchema = object({
     types: array(enum_(GarbageType)),
@@ -41,7 +48,17 @@ const SpotCreationPage: Component = () => {
     defaultValues: { types: [] },
     validatorAdapter: valibotValidator(),
     validators: { onSubmit: formSchema },
-    onSubmit: ({ value }) => console.log(value),
+    onSubmit: async ({ value }) => {
+      await spotCreateMutation.mutateAsync(() => ({
+        location: [getPosition().lat, getPosition().lng],
+        types: value.types,
+      }));
+      showToast({
+        title: t.spot.create.toast.success.title(),
+        variant: "success",
+      });
+      navigate("/");
+    },
   }));
 
   return (

@@ -1,4 +1,5 @@
 import { type Treaty, treaty } from "@elysiajs/eden";
+import type { Accessor } from "solid-js";
 import { getRequestEvent } from "solid-js/web";
 
 import clientEnv from "~/helpers/env-client";
@@ -18,18 +19,33 @@ const apiClient = treaty<API>(clientEnv.VITE_BASE_URL, {
   },
 });
 
+export type TreatyParameter<
+  T extends (
+    ...args: U
+  ) => Promise<Treaty.TreatyResponse<Record<never, unknown>>>,
+  U extends unknown[] = Parameters<T>,
+> = U[0] & undefined extends never ? Accessor<U[0]> : Accessor<null>;
 export type TreatyData<
-  T extends () => Promise<Treaty.TreatyResponse<Record<never, unknown>>>,
+  T extends (
+    ...args: U
+  ) => Promise<Treaty.TreatyResponse<Record<never, unknown>>>,
+  U extends unknown[] = Parameters<T>,
 > = Awaited<ReturnType<T>>["data"];
 export type TreatyError<
-  T extends () => Promise<Treaty.TreatyResponse<Record<never, unknown>>>,
+  T extends (
+    ...args: U
+  ) => Promise<Treaty.TreatyResponse<Record<never, unknown>>>,
+  U extends unknown[] = Parameters<T>,
 > = Awaited<ReturnType<T>>["error"];
 
 export function treatyQueryFn<
-  T extends () => Promise<Treaty.TreatyResponse<Record<never, unknown>>>,
->(fn: T): () => Promise<TreatyData<T>> {
-  return async () => {
-    const response = await fn();
+  T extends (
+    ...args: U
+  ) => Promise<Treaty.TreatyResponse<Record<never, unknown>>>,
+  U extends unknown[] = Parameters<T>,
+>(fn: T): (...args: U) => Promise<TreatyData<T>> {
+  return async (...args: U) => {
+    const response = await fn(...args);
 
     if (response.error) throw response.error;
     return response.data;

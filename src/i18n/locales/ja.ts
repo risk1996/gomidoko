@@ -6,6 +6,7 @@ const ja: RawDictionary = {
 
   common: {
     actions: {
+      close: "閉じる",
       submit: "送信",
     },
   },
@@ -29,6 +30,9 @@ const ja: RawDictionary = {
 
     create: {
       title: "新しいスポットを作成",
+      toast: {
+        success: { title: "スポットが完成に作成されました！" },
+      },
     },
   },
 };

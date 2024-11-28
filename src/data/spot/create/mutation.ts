@@ -2,17 +2,15 @@ import {
   type MutationKey,
   type MutationOptions,
   createMutation,
-  useQueryClient,
 } from "@tanstack/solid-query";
 
-import { UserMeQuery } from "~/data/user/me/query";
-import type { TreatyData, TreatyError } from "~/helpers/api";
+import type { TreatyData, TreatyError, TreatyParameter } from "~/helpers/api";
 import apiClient, { treatyQueryFn } from "~/helpers/api";
 
-export namespace AuthLogoutMutation {
-  export const post = apiClient.api.auth.logout.post;
+export namespace SpotCreateMutation {
+  export const post = apiClient.api.spot.index.post;
   export type Endpoint = typeof post;
-  export type Request = () => null;
+  export type Request = TreatyParameter<Endpoint>;
   export type Response = TreatyData<Endpoint>;
   export type Error = TreatyError<Endpoint>;
   export type Options = Omit<
@@ -21,22 +19,14 @@ export namespace AuthLogoutMutation {
   >;
 
   export function getMutationKey(): MutationKey {
-    return ["auth", "logout"];
+    return ["spot", "create"];
   }
 
   export function useMutation(options?: Options) {
-    const queryClient = useQueryClient();
-
     return createMutation<Response, Error, Request, MutationKey>(() => ({
       mutationKey: getMutationKey(),
-      mutationFn: treatyQueryFn(() => post(undefined)),
+      mutationFn: treatyQueryFn((request: Request) => post(request())),
       ...options,
-      onSuccess(data, variables, context) {
-        options?.onSuccess?.(data, variables, context);
-        queryClient.invalidateQueries({
-          queryKey: UserMeQuery.getQueryKey(() => null),
-        });
-      },
     }));
   }
 }

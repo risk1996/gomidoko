@@ -6,10 +6,10 @@ import api from "~/data";
 
 const HeaderUserMenu: Component = () => {
   const meQuery = api.user.me.useQuery(() => null);
-  const logoutMutation = api.auth.logout.useMutation(() => null);
+  const logoutMutation = api.auth.logout.useMutation();
 
   async function logout() {
-    await logoutMutation.mutateAsync(null);
+    await logoutMutation.mutateAsync(() => null);
   }
 
   return (

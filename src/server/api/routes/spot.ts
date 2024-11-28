@@ -13,7 +13,7 @@ export const spotRoute = new Elysia({ prefix: "/spot" })
     "/",
     async ({ user, body }) => {
       const latLng = convertToLatLng(body.location);
-      if (!isValidLatLng(latLng)) return error(400, null);
+      if (!isValidLatLng(latLng)) return error(400, {});
 
       const results = await db
         .insert(spotTable)
@@ -38,7 +38,7 @@ export const spotRoute = new Elysia({ prefix: "/spot" })
         200: t.Object({
           data: t.Object({ id: t.String() }),
         }),
-        400: t.Null(),
+        400: t.Object({}),
       },
     },
   );

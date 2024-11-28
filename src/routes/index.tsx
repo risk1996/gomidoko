@@ -1,7 +1,9 @@
+import { Icon } from "@iconify-icon/solid";
 import type { RouteDefinition } from "@solidjs/router";
-import type { Component } from "solid-js";
+import { type Component, Show } from "solid-js";
 
 import Container from "~/components/container";
+import { Button } from "~/components/ui/button";
 import api from "~/data";
 import useGeolocation from "~/hooks/use-geolocation";
 import day from "~/lib/dayjs";
@@ -20,7 +22,17 @@ const HomePage: Component = () => {
 
   return (
     <>
-      <div class="z-[-1] flex flex-grow bg-slate-900 p-4" />
+      <div class="relative flex flex-grow bg-slate-900 p-4">
+        <Show when={typeof user.data?.data?.username === "string"}>
+          <Button
+            as="a"
+            href="/spot/create"
+            class="absolute right-0 bottom-0 m-2 size-10 rounded-full"
+          >
+            <Icon icon="tabler:plus" width="24px" />
+          </Button>
+        </Show>
+      </div>
 
       {/* <MapView
         apiKey={clientEnv.VITE_GOOGLE_MAPS_API_KEY}
