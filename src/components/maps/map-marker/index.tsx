@@ -1,7 +1,7 @@
 import { type Component, createResource } from "solid-js";
 
 import { useMapContext } from "~/components/maps/context";
-import type { LatLng } from "~/helpers/geo";
+import type { LatLng } from "~/helpers/maps";
 
 export interface MapMarkerProps {
   position: LatLng;

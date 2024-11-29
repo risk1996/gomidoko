@@ -31,7 +31,7 @@ import GarbageType, { getGarbageIcon } from "~/enums/garbage-type";
 import { allEnumMembers } from "~/helpers/enum";
 import clientEnv from "~/helpers/env-client";
 import { handleFormSubmit } from "~/helpers/form";
-import type { LatLng } from "~/helpers/geo";
+import type { LatLng, TileBoundCoordinates } from "~/helpers/maps";
 import { useAuthenticated } from "~/hooks/use-authenticated";
 import useGeolocation from "~/hooks/use-geolocation";
 import { useI18n } from "~/i18n";
@@ -41,6 +41,7 @@ const SpotCreationPage: Component = () => {
   useAuthenticated();
   const { t } = useI18n();
   const navigate = useNavigate();
+  const [getCoords, setCoords] = createSignal<TileBoundCoordinates[]>([]);
 
   const geolocation = useGeolocation(() => ({
     enableHighAccuracy: true,
@@ -51,13 +52,31 @@ const SpotCreationPage: Component = () => {
 
   createEffect(() => {
     if (geolocation.location === null) return;
+    // TODO: Remove this jitter
+    const jitter = clientEnv.VITE_APP_ENV === "development" ? 0.1 : 0;
     setPosition({
-      lat: geolocation.location.latitude,
-      lng: geolocation.location.longitude,
+      lat: geolocation.location.latitude + (Math.random() - 0.5) * 2 * jitter,
+      lng: geolocation.location.longitude + (Math.random() - 0.5) * 2 * jitter,
     });
   });
 
   const spotCreateMutation = api.spot.create.useMutation();
+  const spotListQueries = api.spot.list.useQueries(
+    () => getCoords().map((coords) => ({ area: coords })),
+    () => ({
+      enabled: getCoords()[0] !== undefined,
+    }),
+  );
+
+  createEffect(() => {
+    console.log(
+      JSON.stringify(
+        spotListQueries.flatMap((q) => q.data?.data ?? []),
+        null,
+        2,
+      ),
+    );
+  });
 
   const formSchema = object({
     types: array(enum_(GarbageType)),
@@ -95,6 +114,7 @@ const SpotCreationPage: Component = () => {
               minZoom: 12,
               styles: MAP_STYLE_INFRASTRUCTURE_ONLY,
             }}
+            onVisibleTileBoundCoordinatesChange={setCoords}
           >
             <MapMarker position={position()} onDrag={setPosition} />
           </MapView>

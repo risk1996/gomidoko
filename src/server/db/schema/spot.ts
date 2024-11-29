@@ -42,9 +42,9 @@ export const spotTable = createTable(
       srid: 4326,
     }).notNull(),
   }),
-  (self) => ({
-    locationIndex: index("spatial_index").using("gist", self.location),
-  }),
+  (self) => [
+    { locationIndex: index("spatial_index").using("gist", self.location) },
+  ],
 );
 
 export const spotRelation = relations(spotTable, ({ one, many }) => ({

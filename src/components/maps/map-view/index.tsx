@@ -3,6 +3,10 @@ import { useColorMode } from "@kobalte/core";
 import { type Component, type JSX, createResource } from "solid-js";
 
 import { MapContext } from "~/components/maps/context";
+import {
+  type TileBoundCoordinates,
+  getAllVisibleTileBoundCoordinates,
+} from "~/helpers/maps";
 
 export interface MapViewProps {
   apiKey: string;
@@ -10,6 +14,7 @@ export interface MapViewProps {
   children?: JSX.Element;
   class?: string;
   options: google.maps.MapOptions;
+  onVisibleTileBoundCoordinatesChange?: (tiles: TileBoundCoordinates[]) => void;
 }
 
 const MapView: Component<MapViewProps> = (props) => {
@@ -33,11 +38,21 @@ const MapView: Component<MapViewProps> = (props) => {
       ...props.options,
     });
 
+    // TODO: Change to proper listener
+    setTimeout(() => {
+      const bounds = map.getBounds();
+      const zoom = map.getZoom();
+      if (bounds === undefined || zoom === undefined) return;
+      props.onVisibleTileBoundCoordinatesChange?.(
+        getAllVisibleTileBoundCoordinates(bounds, zoom),
+      );
+    }, 100);
+
     return { loader, map };
   });
 
   return (
-    <MapContext.Provider value={() => context()}>
+    <MapContext.Provider value={context}>
       <div
         class={props.class}
         ref={(el) => {
