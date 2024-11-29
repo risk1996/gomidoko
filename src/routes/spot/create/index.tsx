@@ -1,4 +1,5 @@
 import { Icon } from "@iconify-icon/solid";
+import { debounce } from "@solid-primitives/scheduled";
 import { useNavigate } from "@solidjs/router";
 import { createForm } from "@tanstack/solid-form";
 import {
@@ -41,7 +42,6 @@ const SpotCreationPage: Component = () => {
   useAuthenticated();
   const { t } = useI18n();
   const navigate = useNavigate();
-  const [getCoords, setCoords] = createSignal<TileBoundCoordinates[]>([]);
 
   const geolocation = useGeolocation(() => ({
     enableHighAccuracy: true,
@@ -49,6 +49,8 @@ const SpotCreationPage: Component = () => {
     timeout: day.duration(3, "seconds").asMilliseconds(),
   }));
   const [getPosition, setPosition] = createSignal<LatLng | null>(null);
+
+  const [getCoords, setCoords] = createSignal<TileBoundCoordinates[]>([]);
 
   createEffect(() => {
     if (geolocation.location === null) return;
@@ -63,9 +65,7 @@ const SpotCreationPage: Component = () => {
   const spotCreateMutation = api.spot.create.useMutation();
   const spotListQueries = api.spot.list.useQueries(
     () => getCoords().map((coords) => ({ area: coords })),
-    () => ({
-      enabled: getCoords()[0] !== undefined,
-    }),
+    () => ({ enabled: getCoords().length > 0 }),
   );
 
   createEffect(() => {
@@ -114,7 +114,7 @@ const SpotCreationPage: Component = () => {
               minZoom: 12,
               styles: MAP_STYLE_INFRASTRUCTURE_ONLY,
             }}
-            onVisibleTileBoundCoordinatesChange={setCoords}
+            onVisibleTileBoundCoordinatesChange={debounce(setCoords, 500)}
           >
             <MapMarker position={position()} onDrag={setPosition} />
           </MapView>
