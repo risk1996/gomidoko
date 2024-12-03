@@ -1,5 +1,4 @@
 import { Icon } from "@iconify-icon/solid";
-import { debounce } from "@solid-primitives/scheduled";
 import { useNavigate } from "@solidjs/router";
 import { createForm } from "@tanstack/solid-form";
 import {
@@ -26,13 +25,12 @@ import {
   SwitchThumb,
 } from "~/components/ui/switch";
 import { showToast } from "~/components/ui/toast";
-import { MAP_STYLE_INFRASTRUCTURE_ONLY } from "~/constants/maps";
 import api from "~/data";
 import GarbageType, { getGarbageIcon } from "~/enums/garbage-type";
 import { allEnumMembers } from "~/helpers/enum";
 import clientEnv from "~/helpers/env-client";
 import { handleFormSubmit } from "~/helpers/form";
-import type { LatLng, TileBoundCoordinates } from "~/helpers/maps";
+import type { LatLng } from "~/helpers/maps";
 import { useAuthenticated } from "~/hooks/use-authenticated";
 import useGeolocation from "~/hooks/use-geolocation";
 import { useI18n } from "~/i18n";
@@ -50,8 +48,6 @@ const SpotCreationPage: Component = () => {
   }));
   const [getPosition, setPosition] = createSignal<LatLng | null>(null);
 
-  const [getCoords, setCoords] = createSignal<TileBoundCoordinates[]>([]);
-
   createEffect(() => {
     if (geolocation.location === null) return;
     // TODO: Remove this jitter
@@ -63,20 +59,6 @@ const SpotCreationPage: Component = () => {
   });
 
   const spotCreateMutation = api.spot.create.useMutation();
-  const spotListQueries = api.spot.list.useQueries(
-    () => getCoords().map((coords) => ({ area: coords })),
-    () => ({ enabled: getCoords().length > 0 }),
-  );
-
-  createEffect(() => {
-    console.log(
-      JSON.stringify(
-        spotListQueries.flatMap((q) => q.data?.data ?? []),
-        null,
-        2,
-      ),
-    );
-  });
 
   const formSchema = object({
     types: array(enum_(GarbageType)),
@@ -112,9 +94,8 @@ const SpotCreationPage: Component = () => {
               center: position(),
               zoom: 16,
               minZoom: 12,
-              styles: MAP_STYLE_INFRASTRUCTURE_ONLY,
+              // styles: MAP_STYLE_INFRASTRUCTURE_ONLY,
             }}
-            onVisibleTileBoundCoordinatesChange={debounce(setCoords, 500)}
           >
             <MapMarker position={position()} onDrag={setPosition} />
           </MapView>

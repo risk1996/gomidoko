@@ -1,6 +1,7 @@
-import { type Component, createResource } from "solid-js";
+import { type Component, createResource, onCleanup } from "solid-js";
 
 import { useMapContext } from "~/components/maps/context";
+import { useMarkerDragEndHook } from "~/components/maps/hooks";
 import type { LatLng } from "~/helpers/maps";
 
 export interface MapMarkerProps {
@@ -11,8 +12,10 @@ export interface MapMarkerProps {
 
 const MapMarker: Component<MapMarkerProps> = (props) => {
   const context = useMapContext();
-  createResource(context, async (context) => {
+
+  const [marker] = createResource(context, async (context) => {
     const lib = await context.loader.importLibrary("marker");
+
     const marker = new lib.AdvancedMarkerElement({
       position: props.position,
       map: context.map,
@@ -20,10 +23,14 @@ const MapMarker: Component<MapMarkerProps> = (props) => {
       title: props.title ?? null,
     });
 
-    if (typeof props.onDrag === "function")
-      marker.addListener("dragend", () =>
-        props.onDrag?.(marker.position as LatLng),
-      );
+    return marker;
+  });
+
+  useMarkerDragEndHook(marker, props.onDrag);
+
+  onCleanup(() => {
+    const m = marker();
+    if (m) m.map = null;
   });
 
   return null;
