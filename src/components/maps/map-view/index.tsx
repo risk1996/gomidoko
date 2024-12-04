@@ -1,5 +1,6 @@
 import { Loader } from "@googlemaps/js-api-loader";
 import { type Component, type JSX, createResource } from "solid-js";
+import type { SetRequired } from "type-fest";
 
 import { MapContext } from "~/components/maps/context";
 import { useVisibleTileBoundCoordinatesChangeHook } from "~/components/maps/hooks";
@@ -10,21 +11,24 @@ export interface MapViewProps {
   version?: string;
   children?: JSX.Element;
   class?: string;
-  options: google.maps.MapOptions;
+  options: SetRequired<
+    Omit<google.maps.MapOptions, "colorScheme" | "styles">,
+    "mapId"
+  >;
   onVisibleTileBoundCoordinatesChange?: (tiles: TileBoundCoordinates[]) => void;
 }
 
 const MapView: Component<MapViewProps> = (props) => {
   let ref: HTMLElement;
   const [context] = createResource(
-    () => props.options,
-    async (options) => {
+    () => props.options.mapId,
+    async () => {
       const loader = new Loader({
         apiKey: props.apiKey,
         version: props.version ?? "weekly",
       });
       const lib = await loader.importLibrary("maps");
-      const map = new lib.Map(ref, options);
+      const map = new lib.Map(ref, props.options);
 
       return { loader, map };
     },
@@ -42,9 +46,8 @@ const MapView: Component<MapViewProps> = (props) => {
         ref={(el) => {
           ref = el;
         }}
-      >
-        {props.children}
-      </div>
+      />
+      {props.children}
     </MapContext.Provider>
   );
 };

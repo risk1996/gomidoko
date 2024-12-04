@@ -11,11 +11,10 @@ export function useVisibleTileBoundCoordinatesChangeHook(
   getMap: Accessor<google.maps.Map | undefined>,
   onVisibleTileBoundCoordinatesChange?: (tiles: TileBoundCoordinates[]) => void,
 ): void {
-  const [listeners] = createResource<Listener[]>(
-    () => {
-      const map = getMap();
-      if (map === undefined) return [];
-
+  type Map = google.maps.Map;
+  const [listeners] = createResource<Listener[], Map>(
+    getMap,
+    (map) => {
       function listener(): void {
         if (map === undefined) return;
         const bounds = map.getBounds();
@@ -43,11 +42,10 @@ export function useMarkerDragEndHook(
   getMarker: Accessor<google.maps.marker.AdvancedMarkerElement | undefined>,
   onDrag?: (position: LatLng) => void,
 ): void {
-  const [listeners] = createResource<Listener[]>(
-    () => {
-      const marker = getMarker();
-      if (marker === undefined) return [];
-
+  type Marker = google.maps.marker.AdvancedMarkerElement;
+  const [listeners] = createResource<Listener[], Marker>(
+    getMarker,
+    (marker) => {
       const dragEndListener = marker.addListener("dragend", () => {
         onDrag?.(marker.position as LatLng);
       });

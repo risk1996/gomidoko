@@ -2,7 +2,14 @@ import { Icon } from "@iconify-icon/solid";
 import { useColorMode } from "@kobalte/core";
 import { debounce } from "@solid-primitives/scheduled";
 import type { RouteDefinition } from "@solidjs/router";
-import { type Component, Show, createEffect, createSignal } from "solid-js";
+import {
+  type Component,
+  For,
+  Show,
+  createEffect,
+  createMemo,
+  createSignal,
+} from "solid-js";
 
 import Container from "~/components/container";
 import { MapMarker, MapView } from "~/components/maps";
@@ -27,22 +34,15 @@ const HomePage: Component = () => {
     timeout: day.duration(3, "seconds").asMilliseconds(),
   }));
   const [getPosition, setPosition] = createSignal<LatLng | null>(null);
-  const [getCoords, setCoords] = createSignal<TileBoundCoordinates[]>([]);
 
+  const [getCoords, setCoords] = createSignal<TileBoundCoordinates[]>([]);
   const spotListQueries = api.spot.list.useQueries(
     () => getCoords().map((coords) => ({ area: coords })),
     () => ({ enabled: getCoords().length > 0 }),
   );
-
-  createEffect(() => {
-    console.log(
-      JSON.stringify(
-        spotListQueries.flatMap((q) => q.data?.data ?? []),
-        null,
-        2,
-      ),
-    );
-  });
+  const spots = createMemo(() =>
+    spotListQueries.flatMap((q) => q.data?.data ?? []),
+  );
 
   createEffect(() => {
     if (geolocation.location === null) return;
@@ -72,6 +72,19 @@ const HomePage: Component = () => {
               onVisibleTileBoundCoordinatesChange={debounce(setCoords, 500)}
             >
               <MapMarker position={position()} onDrag={setPosition} />
+
+              <For each={spots()}>
+                {(spot) => (
+                  <MapMarker
+                    position={{
+                      lat: spot.location[0],
+                      lng: spot.location[1],
+                    }}
+                  >
+                    <Icon icon="tabler:pennant-filled" width="24px" />
+                  </MapMarker>
+                )}
+              </For>
             </MapView>
           )}
         </Show>
