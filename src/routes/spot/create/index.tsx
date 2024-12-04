@@ -1,4 +1,5 @@
 import { Icon } from "@iconify-icon/solid";
+import { useColorMode } from "@kobalte/core";
 import { useNavigate } from "@solidjs/router";
 import { createForm } from "@tanstack/solid-form";
 import {
@@ -25,6 +26,7 @@ import {
   SwitchThumb,
 } from "~/components/ui/switch";
 import { showToast } from "~/components/ui/toast";
+import { MAP_IDS } from "~/constants/maps";
 import api from "~/data";
 import GarbageType, { getGarbageIcon } from "~/enums/garbage-type";
 import { allEnumMembers } from "~/helpers/enum";
@@ -38,6 +40,7 @@ import day from "~/lib/dayjs";
 
 const SpotCreationPage: Component = () => {
   useAuthenticated();
+  const { colorMode } = useColorMode();
   const { t } = useI18n();
   const navigate = useNavigate();
 
@@ -94,7 +97,7 @@ const SpotCreationPage: Component = () => {
               center: position(),
               zoom: 16,
               minZoom: 12,
-              // styles: MAP_STYLE_INFRASTRUCTURE_ONLY,
+              mapId: MAP_IDS[colorMode()],
             }}
           >
             <MapMarker position={position()} onDrag={setPosition} />

@@ -1,7 +1,9 @@
+import type { ColorMode } from "@kobalte/core";
+
 // REF: https://developers.google.com/maps/documentation/javascript/examples/map-coordinates
 export const MAP_TILE_SIZE = 256;
 
-// REF: https://developers.google.com/maps/documentation/javascript/style-reference#style-features
-export const MAP_STYLE_INFRASTRUCTURE_ONLY: google.maps.MapTypeStyle[] = [
-  { featureType: "poi", stylers: [{ visibility: "off" }] },
-];
+export const MAP_IDS = {
+  dark: "9235befb4c140b54",
+  light: "e67de5bb81f556e0",
+} satisfies Record<ColorMode, string>;

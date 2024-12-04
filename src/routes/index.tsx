@@ -1,4 +1,5 @@
 import { Icon } from "@iconify-icon/solid";
+import { useColorMode } from "@kobalte/core";
 import { Button } from "@kobalte/core/button";
 import { debounce } from "@solid-primitives/scheduled";
 import type { RouteDefinition } from "@solidjs/router";
@@ -6,6 +7,7 @@ import { type Component, Show, createEffect, createSignal } from "solid-js";
 
 import Container from "~/components/container";
 import { MapMarker, MapView } from "~/components/maps";
+import { MAP_IDS } from "~/constants/maps";
 import api from "~/data";
 import clientEnv from "~/helpers/env-client";
 import type { LatLng, TileBoundCoordinates } from "~/helpers/maps";
@@ -17,6 +19,7 @@ export const route = {
 } satisfies RouteDefinition;
 
 const HomePage: Component = () => {
+  const { colorMode } = useColorMode();
   const user = api.user.me.useQuery(() => null);
   const geolocation = useGeolocation(() => ({
     enableHighAccuracy: true,
@@ -60,12 +63,12 @@ const HomePage: Component = () => {
           {(position) => (
             <MapView
               apiKey={clientEnv.VITE_GOOGLE_MAPS_API_KEY}
-              class="relative flex flex-grow bg-slate-900"
+              class="relative flex flex-grow"
               options={{
                 center: position(),
                 zoom: 16,
                 minZoom: 12,
-                // styles: MAP_STYLE_INFRASTRUCTURE_ONLY,
+                mapId: MAP_IDS[colorMode()],
               }}
               onVisibleTileBoundCoordinatesChange={debounce(setCoords, 500)}
             >
