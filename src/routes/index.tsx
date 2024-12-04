@@ -1,12 +1,12 @@
 import { Icon } from "@iconify-icon/solid";
 import { useColorMode } from "@kobalte/core";
-import { Button } from "@kobalte/core/button";
 import { debounce } from "@solid-primitives/scheduled";
 import type { RouteDefinition } from "@solidjs/router";
 import { type Component, Show, createEffect, createSignal } from "solid-js";
 
 import Container from "~/components/container";
 import { MapMarker, MapView } from "~/components/maps";
+import { Button } from "~/components/ui/button";
 import { MAP_IDS } from "~/constants/maps";
 import api from "~/data";
 import clientEnv from "~/helpers/env-client";
@@ -46,8 +46,6 @@ const HomePage: Component = () => {
 
   createEffect(() => {
     if (geolocation.location === null) return;
-
-    console.log("GEOLOCATION", geolocation.location);
     // TODO: Remove this jitter
     const jitter = clientEnv.VITE_APP_ENV === "development" ? 0.1 : 0;
     setPosition({
@@ -72,18 +70,19 @@ const HomePage: Component = () => {
               }}
               onVisibleTileBoundCoordinatesChange={debounce(setCoords, 500)}
             >
-              <Show when={typeof user.data?.data?.username === "string"}>
-                <Button
-                  as="a"
-                  href="/spot/create"
-                  class="absolute right-0 bottom-0 m-2 size-10 rounded-full"
-                >
-                  <Icon icon="tabler:plus" width="24px" />
-                </Button>
-              </Show>
               <MapMarker position={position()} onDrag={setPosition} />
             </MapView>
           )}
+        </Show>
+
+        <Show when={typeof user.data?.data?.username === "string"}>
+          <Button
+            as="a"
+            href="/spot/create"
+            class="absolute right-0 bottom-0 m-4 size-10 rounded-full"
+          >
+            <Icon icon="tabler:plus" width="24px" />
+          </Button>
         </Show>
       </div>
 

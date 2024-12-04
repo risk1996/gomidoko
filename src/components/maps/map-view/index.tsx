@@ -19,7 +19,6 @@ const MapView: Component<MapViewProps> = (props) => {
   const [context] = createResource(
     () => props.options.mapId,
     async (mapId) => {
-      console.log(mapId);
       const loader = new Loader({
         apiKey: props.apiKey,
         version: props.version ?? "weekly",
