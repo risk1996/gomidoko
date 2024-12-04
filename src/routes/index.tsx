@@ -67,6 +67,7 @@ const HomePage: Component = () => {
                 zoom: 16,
                 minZoom: 12,
                 mapId: MAP_IDS[colorMode()],
+                disableDefaultUI: true,
               }}
               onVisibleTileBoundCoordinatesChange={debounce(setCoords, 500)}
             >

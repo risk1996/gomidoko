@@ -17,18 +17,14 @@ export interface MapViewProps {
 const MapView: Component<MapViewProps> = (props) => {
   let ref: HTMLElement;
   const [context] = createResource(
-    () => props.options.mapId,
-    async (mapId) => {
+    () => props.options,
+    async (options) => {
       const loader = new Loader({
         apiKey: props.apiKey,
         version: props.version ?? "weekly",
       });
       const lib = await loader.importLibrary("maps");
-      const map = new lib.Map(ref, {
-        disableDefaultUI: true,
-        ...props.options,
-        mapId,
-      });
+      const map = new lib.Map(ref, options);
 
       return { loader, map };
     },

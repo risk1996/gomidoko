@@ -98,6 +98,7 @@ const SpotCreationPage: Component = () => {
               zoom: 16,
               minZoom: 12,
               mapId: MAP_IDS[colorMode()],
+              disableDefaultUI: true,
             }}
           >
             <MapMarker position={position()} onDrag={setPosition} />
