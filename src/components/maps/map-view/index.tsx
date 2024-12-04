@@ -41,13 +41,15 @@ const MapView: Component<MapViewProps> = (props) => {
 
   return (
     <MapContext.Provider value={context}>
-      <div
-        class={props.class}
-        ref={(el) => {
-          ref = el;
-        }}
-      />
-      {props.children}
+      <div class={props.class}>
+        <div
+          class="flex flex-grow"
+          ref={(el) => {
+            ref = el;
+          }}
+        />
+        {props.children}
+      </div>
     </MapContext.Provider>
   );
 };

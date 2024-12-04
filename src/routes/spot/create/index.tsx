@@ -92,7 +92,7 @@ const SpotCreationPage: Component = () => {
         <>
           <MapView
             apiKey={clientEnv.VITE_GOOGLE_MAPS_API_KEY}
-            class="flex flex-grow bg-slate-900 p-4"
+            class="flex flex-grow bg-slate-900"
             options={{
               center: position(),
               zoom: 16,

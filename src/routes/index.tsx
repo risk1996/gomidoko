@@ -56,49 +56,47 @@ const HomePage: Component = () => {
 
   return (
     <>
-      <div class="relative flex flex-grow bg-slate-900">
-        <Show when={getPosition()}>
-          {(position) => (
-            <MapView
-              apiKey={clientEnv.VITE_GOOGLE_MAPS_API_KEY}
-              class="relative flex flex-grow"
-              options={{
-                center: position(),
-                zoom: 16,
-                minZoom: 12,
-                mapId: MAP_IDS[colorMode()],
-                disableDefaultUI: true,
-              }}
-              onVisibleTileBoundCoordinatesChange={debounce(setCoords, 500)}
-            >
-              <MapMarker position={position()} onDrag={setPosition} />
-
-              <For each={spots()}>
-                {(spot) => (
-                  <MapMarker
-                    position={{
-                      lat: spot.location[0],
-                      lng: spot.location[1],
-                    }}
-                  >
-                    <Icon icon="tabler:pennant-filled" width="24px" />
-                  </MapMarker>
-                )}
-              </For>
-            </MapView>
-          )}
-        </Show>
-
-        <Show when={typeof user.data?.data?.username === "string"}>
-          <Button
-            as="a"
-            href="/spot/create"
-            class="absolute right-0 bottom-0 m-4 size-10 rounded-full"
+      <Show when={getPosition()}>
+        {(position) => (
+          <MapView
+            apiKey={clientEnv.VITE_GOOGLE_MAPS_API_KEY}
+            class="relative flex flex-grow bg-slate-900"
+            options={{
+              center: position(),
+              zoom: 16,
+              minZoom: 12,
+              mapId: MAP_IDS[colorMode()],
+              disableDefaultUI: true,
+            }}
+            onVisibleTileBoundCoordinatesChange={debounce(setCoords, 500)}
           >
-            <Icon icon="tabler:plus" width="24px" />
-          </Button>
-        </Show>
-      </div>
+            <MapMarker position={position()} onDrag={setPosition} />
+
+            <For each={spots()}>
+              {(spot) => (
+                <MapMarker
+                  position={{
+                    lat: spot.location[0],
+                    lng: spot.location[1],
+                  }}
+                >
+                  <Icon icon="tabler:pennant-filled" width="24px" />
+                </MapMarker>
+              )}
+            </For>
+
+            <Show when={typeof user.data?.data?.username === "string"}>
+              <Button
+                as="a"
+                href="/spot/create"
+                class="absolute right-0 bottom-0 m-4 size-10 rounded-full"
+              >
+                <Icon icon="tabler:plus" width="24px" />
+              </Button>
+            </Show>
+          </MapView>
+        )}
+      </Show>
 
       <Container>
         <h2 class="font-bold text-3xl">
