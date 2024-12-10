@@ -87,7 +87,10 @@ const SpotCreationPage: Component = () => {
   }));
 
   return (
-    <Show when={getPosition()}>
+    <Show
+      when={getPosition()}
+      fallback={<div class="relative flex flex-grow bg-slate-900" />}
+    >
       {(position) => (
         <>
           <MapView

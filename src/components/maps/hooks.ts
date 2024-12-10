@@ -16,7 +16,6 @@ export function useVisibleTileBoundCoordinatesChangeHook(
     getMap,
     (map) => {
       function listener(): void {
-        if (map === undefined) return;
         const bounds = map.getBounds();
         const zoom = map.getZoom();
         if (bounds === undefined || zoom === undefined) return;

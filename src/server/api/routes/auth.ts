@@ -7,7 +7,6 @@ import invariant from "tiny-invariant";
 import AuthProvider from "~/enums/auth-provider";
 import serverEnv from "~/helpers/env-server";
 import { tryOrNull, tryOrNullAsync } from "~/helpers/fallible";
-import { convertToUsername } from "~/helpers/user";
 import { db } from "~/server/db";
 import type { Entity, ID } from "~/server/db/id";
 import { userSessionTable, userTable } from "~/server/db/schema";
@@ -76,12 +75,10 @@ export const authRoute = new Elysia({ prefix: "/auth" })
 
       const {
         sub: googleId,
-        name,
         email,
         email_verified: emailVerified,
         picture,
       } = claims;
-      const username = convertToUsername(name);
 
       let existingUsers = await db
         .select({ id: userTable.id })
@@ -92,7 +89,7 @@ export const authRoute = new Elysia({ prefix: "/auth" })
       if (existingUsers.length === 0)
         existingUsers = await db
           .insert(userTable)
-          .values({ email, emailVerified, username, googleId, picture })
+          .values({ email, emailVerified, username: email, googleId, picture })
           .returning({ id: userTable.id });
       const existingUser = existingUsers[0];
       invariant(existingUser, "User was not created");
@@ -146,14 +143,14 @@ export const authRoute = new Elysia({ prefix: "/auth" })
     "/logout",
     async ({ cookie: { auth } }) => {
       const session = auth.value;
-      if (!session) return null;
+      if (!session) return new Response(null, { status: 204 });
 
       await db
         .delete(userSessionTable)
         .where(eq(userSessionTable.id, auth.value as ID<Entity.UserSession>));
       auth.remove();
 
-      return null;
+      return new Response(null, { status: 204 });
     },
     {
       cookie: t.Cookie(
@@ -161,7 +158,7 @@ export const authRoute = new Elysia({ prefix: "/auth" })
         { httpOnly: true, secure: serverEnv.VITE_APP_ENV === "production" },
       ),
       response: {
-        200: t.Null(),
+        204: t.Null(),
       },
     },
   );

@@ -6,10 +6,11 @@ import {
   translator,
 } from "@solid-primitives/i18n";
 import {
+  type Accessor,
   type Resource,
+  createEffect,
   createResource,
   createSignal,
-  startTransition,
 } from "solid-js";
 
 import type en from "~/i18n/locales/en";
@@ -24,24 +25,19 @@ export async function fetchDictionary(locale: Locale): Promise<Dictionary> {
   return flatten(dict);
 }
 
-const [getLocale, setLocale] = createSignal<Locale>("en");
-day.locale(getLocale());
-
 export interface I18n {
   t: NullableChainedTranslator<Dictionary, string>;
   dict: Resource<Dictionary>;
-  getLocale: typeof getLocale;
+  getLocale: Accessor<Locale>;
   changeLocale: (locale: Locale) => void;
 }
 export type I18nT = I18n["t"];
 export function useI18n(): I18n {
+  const [getLocale, setLocale] = createSignal<Locale>("en");
+  createEffect(() => day.locale(getLocale()));
+
   const [dict] = createResource(getLocale, fetchDictionary);
   const t = proxyTranslator(translator(dict));
 
-  const changeLocale = (locale: Locale) => {
-    startTransition(() => setLocale(locale));
-    day.locale(locale);
-  };
-
-  return { t, dict, getLocale, changeLocale };
+  return { t, dict, getLocale, changeLocale: setLocale };
 }

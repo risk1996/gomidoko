@@ -9,6 +9,12 @@ const ja: RawDictionary = {
       close: "閉じる",
       submit: "送信",
     },
+    form: {
+      validations: {
+        minLength: "最小の長さは{{minLength}}です",
+        maxLength: "最大の長さは{{maxLength}}です",
+      },
+    },
   },
 
   enums: {
@@ -32,6 +38,26 @@ const ja: RawDictionary = {
       title: "新しいスポットを作成",
       toast: {
         success: { title: "スポットが完成に作成されました！" },
+      },
+    },
+  },
+
+  me: {
+    username: {
+      title: "ユーザー名を変更",
+      form: {
+        fields: {
+          username: {
+            label: "ユーザー名",
+            placeholder: "ユーザー名を入力してください",
+          },
+        },
+        validations: {
+          username: "英数字とアンダースコアのみが許可されています",
+        },
+      },
+      toast: {
+        success: { title: "ユーザー名が変更されました！" },
       },
     },
   },

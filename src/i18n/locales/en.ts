@@ -8,6 +8,12 @@ const en = {
       close: "Close",
       submit: "Submit",
     },
+    form: {
+      validations: {
+        minLength: "Minimum length is {{minLength}}",
+        maxLength: "Maximum length is {{maxLength}}",
+      },
+    },
   },
 
   enums: {
@@ -31,6 +37,26 @@ const en = {
       title: "Create new spot",
       toast: {
         success: { title: "Spot created successfully!" },
+      },
+    },
+  },
+
+  me: {
+    username: {
+      title: "Change Username",
+      form: {
+        fields: {
+          username: {
+            label: "Username",
+            placeholder: "Enter your username",
+          },
+        },
+        validations: {
+          username: "Only alphanumeric characters and underscores are allowed",
+        },
+      },
+      toast: {
+        success: { title: "Username changed successfully!" },
       },
     },
   },

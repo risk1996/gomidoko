@@ -17,8 +17,13 @@ export const userTable = createTable(
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .$onUpdate(() => new Date())
+      .notNull()
+      .defaultNow(),
     email: text("email").notNull().unique("user_email_unique"),
     emailVerified: boolean("email_verified").notNull().default(false),
+    // NOTE: Username will be equal to the email address initially, can only change when it is the same as the email address
     username: text("username").notNull().unique("user_username_unique"),
     googleId: text("google_id").unique("user_google_id_unique"),
     picture: text("picture"),

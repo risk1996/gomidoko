@@ -8,7 +8,7 @@ import { userSessionTable, userTable } from "~/server/db/schema";
 
 export function maybeUserSession() {
   return new Elysia({ name: "~/maybe-user-session" }).resolve(
-    { as: "global" },
+    { as: "scoped" },
     async ({ cookie }) => {
       const authValue = cookie["auth"]?.value;
       if (typeof authValue !== "string") return { user: null };
@@ -41,7 +41,7 @@ export function maybeUserSession() {
 export function userSession() {
   return new Elysia({ name: "~/user-session" })
     .use(maybeUserSession())
-    .resolve({ as: "global" }, async ({ user }) => {
+    .resolve({ as: "scoped" }, async ({ user }) => {
       if (!user) throw error(401, {});
 
       return { user };
