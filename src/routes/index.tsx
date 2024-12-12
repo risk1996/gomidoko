@@ -14,6 +14,7 @@ import {
 import Container from "~/components/container";
 import { MapMarker, MapView } from "~/components/maps";
 import { Button } from "~/components/ui/button";
+import { Skeleton } from "~/components/ui/skeleton";
 import { MAP_IDS } from "~/constants/maps";
 import api from "~/data";
 import clientEnv from "~/helpers/env-client";
@@ -58,7 +59,7 @@ const HomePage: Component = () => {
     <>
       <Show
         when={getPosition()}
-        fallback={<div class="relative flex flex-grow bg-slate-900" />}
+        fallback={<Skeleton class="relative flex flex-grow" />}
       >
         {(position) => (
           <MapView

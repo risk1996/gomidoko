@@ -89,7 +89,7 @@ const SpotCreationPage: Component = () => {
   return (
     <Show
       when={getPosition()}
-      fallback={<div class="relative flex flex-grow bg-slate-900" />}
+      fallback={<Skeleton class="relative flex flex-grow" />}
     >
       {(position) => (
         <>
