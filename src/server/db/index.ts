@@ -10,7 +10,7 @@ import * as schema from "~/server/db/schema";
 
 export const db = drizzle({
   connection: {
-    connectionString: serverEnv.DB_URL,
+    connectionString: serverEnv.DATABASE_URL,
   },
   schema,
 });

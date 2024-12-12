@@ -3,12 +3,13 @@ import { Value } from "@sinclair/typebox/value";
 import { Google } from "arctic";
 
 import serverEnv from "~/helpers/env-server";
+import { getBaseUrl } from "~/helpers/url";
 
 namespace GoogleOAuth {
   export const client = new Google(
     serverEnv.OAUTH_GOOGLE_CLIENT_ID,
     serverEnv.OAUTH_GOOGLE_CLIENT_SECRET,
-    `${serverEnv.VITE_BASE_URL}/api/auth/login/google/callback`,
+    `${getBaseUrl()}/api/auth/login/google/callback`,
   );
 
   export const scope = ["openid", "profile", "email"];

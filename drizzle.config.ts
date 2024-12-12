@@ -7,7 +7,7 @@ export default defineConfig({
   schema: "./src/server/db/schema/index.ts",
   dialect: "postgresql",
   dbCredentials: {
-    url: serverEnv.DB_URL,
+    url: serverEnv.DATABASE_URL,
   },
   tablesFilter: ["gomidoko_*"],
 });

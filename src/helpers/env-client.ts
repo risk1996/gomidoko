@@ -2,6 +2,7 @@ import {
   type InferOutput,
   literal,
   object,
+  optional,
   parse,
   string,
   union,
@@ -10,6 +11,8 @@ import {
 const ClientEnvSchema = object({
   VITE_APP_ENV: union([literal("production"), literal("development")]),
   VITE_BASE_URL: string(),
+
+  VERCEL_URL: optional(string()),
 
   VITE_GOOGLE_MAPS_API_KEY: string(),
 });

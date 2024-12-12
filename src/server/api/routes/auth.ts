@@ -7,6 +7,7 @@ import invariant from "tiny-invariant";
 import AuthProvider from "~/enums/auth-provider";
 import serverEnv from "~/helpers/env-server";
 import { tryOrNull, tryOrNullAsync } from "~/helpers/fallible";
+import { getBaseUrl } from "~/helpers/url";
 import { db } from "~/server/db";
 import type { Entity, ID } from "~/server/db/id";
 import { userSessionTable, userTable } from "~/server/db/schema";
@@ -117,7 +118,7 @@ export const authRoute = new Elysia({ prefix: "/auth" })
 
       return new Response(null, {
         status: 302,
-        headers: { location: `${serverEnv.VITE_BASE_URL}/oauth/logged-in` },
+        headers: { location: `${getBaseUrl()}/oauth/logged-in` },
       });
     },
     {

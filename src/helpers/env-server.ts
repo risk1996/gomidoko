@@ -8,9 +8,11 @@ const ServerEnvSchema = Type.Object({
   ]),
   VITE_BASE_URL: Type.String(),
 
+  VERCEL_URL: Type.Optional(Type.String()),
+
   VITE_GOOGLE_MAPS_API_KEY: Type.String(),
 
-  DB_URL: Type.String(),
+  DATABASE_URL: Type.String(),
 
   OAUTH_GOOGLE_CLIENT_ID: Type.String(),
   OAUTH_GOOGLE_CLIENT_SECRET: Type.String(),
