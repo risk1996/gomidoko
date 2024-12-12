@@ -2,16 +2,6 @@ import { type Static, Type } from "@sinclair/typebox";
 import { Value } from "@sinclair/typebox/value";
 
 const ServerEnvSchema = Type.Object({
-  VITE_APP_ENV: Type.Union([
-    Type.Literal("production"),
-    Type.Literal("development"),
-  ]),
-  VITE_BASE_URL: Type.String(),
-
-  VERCEL_URL: Type.Optional(Type.String()),
-
-  VITE_GOOGLE_MAPS_API_KEY: Type.String(),
-
   DATABASE_URL: Type.String(),
 
   OAUTH_GOOGLE_CLIENT_ID: Type.String(),

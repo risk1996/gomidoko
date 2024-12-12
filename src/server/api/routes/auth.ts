@@ -5,7 +5,7 @@ import Elysia, { t } from "elysia";
 import invariant from "tiny-invariant";
 
 import AuthProvider from "~/enums/auth-provider";
-import serverEnv from "~/helpers/env-server";
+import clientEnv from "~/helpers/env-client";
 import { tryOrNull, tryOrNullAsync } from "~/helpers/fallible";
 import { getBaseUrl } from "~/helpers/url";
 import { db } from "~/server/db";
@@ -29,7 +29,7 @@ export const authRoute = new Elysia({ prefix: "/auth" })
         value: { state, codeVerifier },
         path: "/",
         httpOnly: true,
-        secure: serverEnv.VITE_APP_ENV === "production",
+        secure: clientEnv.VITE_APP_ENV === "production",
         maxAge: dayjs.duration(10, "minutes").asSeconds(),
         sameSite: true,
       });
@@ -49,7 +49,7 @@ export const authRoute = new Elysia({ prefix: "/auth" })
             }),
           ),
         },
-        { httpOnly: true, secure: serverEnv.VITE_APP_ENV === "production" },
+        { httpOnly: true, secure: clientEnv.VITE_APP_ENV === "production" },
       ),
       response: {
         302: t.Null(),
@@ -110,7 +110,7 @@ export const authRoute = new Elysia({ prefix: "/auth" })
         value: session.id,
         path: "/",
         httpOnly: true,
-        secure: serverEnv.VITE_APP_ENV === "production",
+        secure: clientEnv.VITE_APP_ENV === "production",
         maxAge: dayjs.duration(1, "day").asSeconds(),
         sameSite: "lax",
       });
@@ -131,7 +131,7 @@ export const authRoute = new Elysia({ prefix: "/auth" })
             codeVerifier: t.String(),
           }),
         },
-        { httpOnly: true, secure: serverEnv.VITE_APP_ENV === "production" },
+        { httpOnly: true, secure: clientEnv.VITE_APP_ENV === "production" },
       ),
       response: {
         302: t.Null(),
@@ -156,7 +156,7 @@ export const authRoute = new Elysia({ prefix: "/auth" })
     {
       cookie: t.Cookie(
         { auth: t.Optional(t.String()) },
-        { httpOnly: true, secure: serverEnv.VITE_APP_ENV === "production" },
+        { httpOnly: true, secure: clientEnv.VITE_APP_ENV === "production" },
       ),
       response: {
         204: t.Null(),
