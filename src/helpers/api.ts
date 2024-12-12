@@ -2,10 +2,10 @@ import { type Treaty, treaty } from "@elysiajs/eden";
 import type { Accessor } from "solid-js";
 import { getRequestEvent } from "solid-js/web";
 
-import { getBaseUrl } from "~/helpers/url";
+import { getUrl } from "~/helpers/url";
 import type { API } from "~/server/api";
 
-const apiClient = treaty<API>(getBaseUrl(), {
+const apiClient = treaty<API>(getUrl().toString(), {
   headers(_path, options) {
     const headers = new Headers(options.headers);
     const event = getRequestEvent();
