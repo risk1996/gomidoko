@@ -7,7 +7,10 @@ import {
 } from "solid-js";
 
 import { useMapContext } from "~/components/maps/context";
-import { useMarkerDragEndHook } from "~/components/maps/hooks";
+import {
+  useMarkerDragEndHook,
+  useMarkerPositionSync,
+} from "~/components/maps/hooks";
 import type { LatLng } from "~/helpers/maps";
 
 export interface MapMarkerProps {
@@ -41,6 +44,7 @@ const MapMarker: Component<MapMarkerProps> = (props) => {
     return marker;
   });
 
+  useMarkerPositionSync(marker, () => props.position);
   useMarkerDragEndHook(marker, props.onDrag);
 
   onCleanup(() => {

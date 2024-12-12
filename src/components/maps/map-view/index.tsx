@@ -3,7 +3,10 @@ import { type Component, type JSX, createResource } from "solid-js";
 import type { SetRequired } from "type-fest";
 
 import { MapContext } from "~/components/maps/context";
-import { useVisibleTileBoundCoordinatesChangeHook } from "~/components/maps/hooks";
+import {
+  useMapCenterSync,
+  useVisibleTileBoundCoordinatesChangeHook,
+} from "~/components/maps/hooks";
 import type { TileBoundCoordinates } from "~/helpers/maps";
 
 export interface MapViewProps {
@@ -34,6 +37,10 @@ const MapView: Component<MapViewProps> = (props) => {
     },
   );
 
+  useMapCenterSync(
+    () => context()?.map,
+    () => props.options.center,
+  );
   useVisibleTileBoundCoordinatesChangeHook(
     () => context()?.map,
     props.onVisibleTileBoundCoordinatesChange,

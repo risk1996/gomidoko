@@ -1,17 +1,23 @@
-import { type Accessor, createResource, onCleanup } from "solid-js";
+import {
+  type Accessor,
+  createEffect,
+  createResource,
+  onCleanup,
+} from "solid-js";
 import {
   type LatLng,
   type TileBoundCoordinates,
   getAllVisibleTileBoundCoordinates,
 } from "~/helpers/maps";
 
+type Map = google.maps.Map;
+type Marker = google.maps.marker.AdvancedMarkerElement;
 type Listener = google.maps.MapsEventListener;
 
 export function useVisibleTileBoundCoordinatesChangeHook(
   getMap: Accessor<google.maps.Map | undefined>,
   onVisibleTileBoundCoordinatesChange?: (tiles: TileBoundCoordinates[]) => void,
 ): void {
-  type Map = google.maps.Map;
   const [listeners] = createResource<Listener[], Map>(
     getMap,
     (map) => {
@@ -37,11 +43,24 @@ export function useVisibleTileBoundCoordinatesChangeHook(
   });
 }
 
+export function useMapCenterSync(
+  getMap: Accessor<Map | undefined>,
+  getCenter: Accessor<Parameters<Map["setCenter"]>[0] | null | undefined>,
+): void {
+  createEffect(() => {
+    const map = getMap();
+    if (!map) return;
+
+    const center = getCenter();
+    if (center === null || center === undefined) return;
+    map.setCenter(center);
+  });
+}
+
 export function useMarkerDragEndHook(
-  getMarker: Accessor<google.maps.marker.AdvancedMarkerElement | undefined>,
+  getMarker: Accessor<Marker | undefined>,
   onDrag?: (position: LatLng) => void,
 ): void {
-  type Marker = google.maps.marker.AdvancedMarkerElement;
   const [listeners] = createResource<Listener[], Marker>(
     getMarker,
     (marker) => {
@@ -56,5 +75,17 @@ export function useMarkerDragEndHook(
 
   onCleanup(() => {
     for (const listener of listeners()) listener.remove();
+  });
+}
+
+export function useMarkerPositionSync(
+  getMarker: Accessor<Marker | undefined>,
+  getPosition: Accessor<LatLng>,
+): void {
+  createEffect(() => {
+    const marker = getMarker();
+    if (!marker) return;
+
+    marker.position = getPosition();
   });
 }
