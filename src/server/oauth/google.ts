@@ -9,7 +9,7 @@ namespace GoogleOAuth {
   export const client = new Google(
     serverEnv.OAUTH_GOOGLE_CLIENT_ID,
     serverEnv.OAUTH_GOOGLE_CLIENT_SECRET,
-    `${getBaseUrl()}/api/auth/login/google/callback`,
+    `${getBaseUrl()}api/auth/login/google/callback`,
   );
 
   export const scope = ["openid", "profile", "email"];

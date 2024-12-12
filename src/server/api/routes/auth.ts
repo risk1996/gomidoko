@@ -118,7 +118,7 @@ export const authRoute = new Elysia({ prefix: "/auth" })
 
       return new Response(null, {
         status: 302,
-        headers: { location: `${getBaseUrl()}/oauth/logged-in` },
+        headers: { location: `${getBaseUrl()}oauth/logged-in` },
       });
     },
     {
